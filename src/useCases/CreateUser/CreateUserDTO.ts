@@ -1,7 +1,7 @@
 export interface ICreateUserRequestDTO {
+  name: string;
   username: string;
   email: string;
   password: string;
-  name: string;
   gender: string;
 }

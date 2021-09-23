@@ -1,12 +1,11 @@
-import { User } from '../entities/User';
+import { CreatedUser, PublicUser, UpdatedUserFields } from '../entities/User';
 
 export interface IUsersRepository {
-  findById(userId: string): Promise<User>;
-  findByEmail(email: string): Promise<User>;
-  findByUsername(username: string): Promise<User>;
-  findAll(): Promise<Array<User>>;
+  findById(userId: string): Promise<PublicUser | null>;
+  findByEmail(email: string): Promise<PublicUser | null>;
+  findByUsername(username: string): Promise<PublicUser | null>;
 
-  create(user: User): Promise<void>;
+  create(user: CreatedUser): Promise<void>;
   delete(userId: string): Promise<void>;
-  update(userId: string, data: User): Promise<void>;
+  update(userId: string, data: UpdatedUserFields): Promise<void>;
 }

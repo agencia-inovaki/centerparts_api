@@ -1,13 +1,13 @@
 import { IUsersRepository } from '../../repositories/IUsersRepository';
 import { ICreateUserRequestDTO } from './CreateUserDTO';
-import { User } from '../../entities/User';
+import { CreatedUser } from '../../entities/User';
 
 export class CreateUserUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
   async execute(data: ICreateUserRequestDTO) {
     Object.entries(data).map(data => {
-      if (!data[1]) throw new Error('Fields cannot be blank.');
+      if (!data[1].replace(/\s+/g, '')) throw new Error('Fields are invalid.');
     });
 
     const emailAlreadyExists = await this.usersRepository.findByEmail(
@@ -20,7 +20,7 @@ export class CreateUserUseCase {
     );
     if (usernameAlreadyExists) throw new Error('Username already exists.');
 
-    const user = new User(data);
+    const user = new CreatedUser(data);
 
     await this.usersRepository.create(user);
   }

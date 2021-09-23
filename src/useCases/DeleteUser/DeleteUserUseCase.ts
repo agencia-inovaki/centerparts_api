@@ -5,11 +5,10 @@ export class DeleteUserUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
   async execute(data: IDeleteUserRequestDTO) {
-    if (!data.id) throw new Error('Id cannot be blank.');
+    if (!data.id.replace(/\s+/g, '')) throw new Error('User id is invalid.');
 
-    const idExists = await this.usersRepository.findById(data.id);
-
-    if (!idExists) throw new Error('Cannot find user id.');
+    const user = await this.usersRepository.findById(data.id);
+    if (!user) throw new Error('Cannot find user by id.');
 
     await this.usersRepository.delete(data.id);
   }
