@@ -5,27 +5,16 @@ export async function up(knex: Knex): Promise<void> {
     if (exists) return;
 
     return knex.schema.createTable('users', table => {
-      table.increments('id').primary();
+      table.string('id').primary();
 
+      table.string('name').notNullable();
+      table.string('username').unique().notNullable();
       table.string('email').unique().notNullable();
       table.string('password').notNullable();
-      table.string('username').unique().notNullable();
-      table.string('name').notNullable();
       table.string('gender').notNullable();
-      table.integer('avatar_id').notNullable();
       table.string('biography');
-      table.integer('uploaded_recipes_count');
-      table.integer('liked_recipes_count');
+      table.integer('avatar_id').notNullable();
       table.integer('friends_count');
-      table.string('status');
-
-      table
-        .integer('role_id')
-        .unsigned()
-        .references('id')
-        .inTable('roles')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE');
 
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('updated_at').defaultTo(knex.fn.now());
