@@ -2,6 +2,7 @@ import { FriendRequest } from '../../entities/FriendRequest';
 import { PublicUser } from '../../entities/User';
 import { IFriendsRepository } from '../IFriendsRepository';
 import { knex } from '../../database/connection';
+import { Friendship } from '../../entities/Friendship';
 
 export class MySqlFriendsRepository implements IFriendsRepository {
   async findAllFriends(userId: string): Promise<Array<PublicUser>> {
@@ -88,6 +89,20 @@ export class MySqlFriendsRepository implements IFriendsRepository {
         'friend_requests.receiver_id'
       )
       .where('friend_requests.id', requestId)
+      .first();
+
+    return query[0];
+  }
+
+  async findFriendship(userId: string, friendId: string): Promise<Friendship> {
+    const query = await knex('users_friends')
+      .select([
+        'users_friends.id as friendship_id',
+        'users_friends.user_id',
+        'users_friends.friend_id',
+      ])
+      .where({ user_id: userId })
+      .andWhere({ friend_id: friendId })
       .first();
 
     return query[0];
