@@ -1,23 +1,23 @@
 import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.hasTable('friend_requests').then(exists => {
+  await knex.schema.hasTable('users_friends').then(exists => {
     if (exists) return;
 
-    return knex.schema.createTable('friend_requests', table => {
+    return knex.schema.createTable('users_friends', table => {
       table.increments('id').primary();
 
-      table.string('sender_id');
+      table.string('user_id');
       table
-        .foreign('sender_id')
+        .foreign('user_id')
         .references('id')
         .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
 
-      table.string('receiver_id');
+      table.string('friend_id');
       table
-        .foreign('receiver_id')
+        .foreign('friend_id')
         .references('id')
         .inTable('users')
         .onUpdate('CASCADE')
@@ -29,5 +29,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable('friend_requests');
+  await knex.schema.dropTable('users_friends');
 }

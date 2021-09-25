@@ -33,25 +33,15 @@ export class PublicUser {
   public name: string;
   public username: string;
   public gender: string;
-  public avatar_id: number;
   public biography: string;
-
-  public uploaded_recipes_count: number;
-  public liked_recipes_count: number;
-
+  public avatar_id: number;
   public friends_count: number;
-  public social_status: string;
-
-  public cuisine_role_id: number;
-
-  public created_at: string;
 
   constructor(props: PublicUser) {
     Object.assign(this, props);
   }
 }
 
-// change in migrations too
 export class User {
   public readonly id: string;
 
@@ -60,16 +50,9 @@ export class User {
   public email: string;
   public password: string;
   public gender: string;
-  public avatar_id: number;
   public biography: string;
-
-  public uploaded_recipes_count: number;
-  public liked_recipes_count: number;
-
+  public avatar_id: number;
   public friends_count: number;
-  public social_status: string;
-
-  public cuisine_role_id: number;
 
   public created_at: string;
   public updated_at: string;

@@ -15,9 +15,8 @@ export class MySqlUsersRepository implements IUsersRepository {
         'friends.name as friend_name',
         'friends.username as friend_username',
         'friends.gender as friend_gender',
-        'friends.avatar_id as friend_avatar_id',
         'friends.biography as friend_biography',
-        'friends.uploaded_recipes_count as friend_recipes_count',
+        'friends.avatar_id as friend_avatar_id',
         'friends.friends_count as friend_friends_count',
       ])
       .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
@@ -39,11 +38,9 @@ export class MySqlUsersRepository implements IUsersRepository {
         'friends.name as friend_name',
         'friends.username as friend_username',
         'friends.gender as friend_gender',
-        'friends.avatar_id as friend_avatar_id',
         'friends.biography as friend_biography',
-        'friends.uploaded_recipes_count as friend_recipes_count',
+        'friends.avatar_id as friend_avatar_id',
         'friends.friends_count as friend_friends_count',
-        'friends.social_status as friend_social_status',
       ])
       .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
       .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')
@@ -63,24 +60,18 @@ export class MySqlUsersRepository implements IUsersRepository {
         'users.name',
         'users.username',
         'users.gender',
-        'users.avatar_id',
         'users.biography',
-        'users.uploaded_recipes_count',
+        'users.avatar_id',
         'users.friends_count',
-        'users.social_status',
-        'roles.name as cuisine_role',
-        'users_friends.friend_id as friends_list',
-        'recipes.id as recipes_list',
       ])
-      .innerJoin('roles', 'roles.id', 'users.cuisine_role_id')
-      .innerJoin('users_friends', 'users_friends.user_id', 'users.id')
-      .innerJoin('recipes', 'recipes.author_id', 'users.id')
       .where({ id: userId })
       .first();
 
+    console.log(query);
+
     if (!query) return null;
 
-    return query[0];
+    return query;
   }
 
   async findByEmail(email: string): Promise<PublicUser | null> {
@@ -90,18 +81,10 @@ export class MySqlUsersRepository implements IUsersRepository {
         'users.name',
         'users.username',
         'users.gender',
-        'users.avatar_id',
         'users.biography',
-        'users.uploaded_recipes_count',
+        'users.avatar_id',
         'users.friends_count',
-        'users.social_status',
-        'roles.name as cuisine_role',
-        'users_friends.friend_id as friends_list',
-        'recipes.id as recipes_list',
       ])
-      .innerJoin('roles', 'roles.id', 'users.cuisine_role_id')
-      .innerJoin('users_friends', 'users_friends.user_id', 'users.id')
-      .innerJoin('recipes', 'recipes.author_id', 'users.id')
       .where({ email })
       .first();
 
@@ -117,18 +100,10 @@ export class MySqlUsersRepository implements IUsersRepository {
         'users.name',
         'users.username',
         'users.gender',
-        'users.avatar_id',
         'users.biography',
-        'users.uploaded_recipes_count',
+        'users.avatar_id',
         'users.friends_count',
-        'users.social_status',
-        'roles.name as cuisine_role',
-        'users_friends.friend_id as friends_list',
-        'recipes.id as recipes_list',
       ])
-      .innerJoin('roles', 'roles.id', 'users.cuisine_role_id')
-      .innerJoin('users_friends', 'users_friends.user_id', 'users.id')
-      .innerJoin('recipes', 'recipes.author_id', 'users.id')
       .where({ username })
       .first();
 
@@ -138,28 +113,19 @@ export class MySqlUsersRepository implements IUsersRepository {
   }
 
   async findAll(): Promise<Array<PublicUser> | null> {
-    const query = await knex<User>('users')
-      .select([
-        'users.id',
-        'users.name',
-        'users.username',
-        'users.gender',
-        'users.avatar_id',
-        'users.biography',
-        'users.uploaded_recipes_count',
-        'users.friends_count',
-        'users.social_status',
-        'roles.name as cuisine_role',
-        'users_friends.friend_id as friends_list',
-        'recipes.id as recipes_list',
-      ])
-      .innerJoin('roles', 'roles.id', 'users.cuisine_role_id')
-      .innerJoin('users_friends', 'users_friends.user_id', 'users.id')
-      .innerJoin('recipes', 'recipes.author_id', 'users.id');
+    const query = await knex<User>('users').select([
+      'users.id',
+      'users.name',
+      'users.username',
+      'users.gender',
+      'users.biography',
+      'users.avatar_id',
+      'users.friends_count',
+    ]);
 
     if (!query) return null;
 
-    return query;
+    return query[0];
   }
 
   async create(user: CreatedUser): Promise<void> {
