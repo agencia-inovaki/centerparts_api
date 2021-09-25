@@ -19,7 +19,6 @@ export class MySqlUsersRepository implements IUsersRepository {
         'friends.biography as friend_biography',
         'friends.uploaded_recipes_count as friend_recipes_count',
         'friends.friends_count as friend_friends_count',
-        'friends.social_status as friend_social_status',
       ])
       .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
       .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')

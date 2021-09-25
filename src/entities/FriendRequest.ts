@@ -1,9 +1,10 @@
 export class FriendRequest {
-  public readonly id: number;
+  public readonly request_id: number;
 
   public sender_id: string;
+  public sender_username: string;
   public receiver_id: string;
-  public is_accepted: number;
+  public receiver_username: string;
 
   constructor(props: FriendRequest) {
     Object.assign(this, props);
