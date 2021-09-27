@@ -4,8 +4,8 @@ import { IRemoveFriendRequestDTO } from './RemoveFriendDTO';
 
 export class RemoveFriendUseCase {
   constructor(
-    private friendsRepository: IFriendsRepository,
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    private friendsRepository: IFriendsRepository
   ) {}
 
   async execute(data: IRemoveFriendRequestDTO) {

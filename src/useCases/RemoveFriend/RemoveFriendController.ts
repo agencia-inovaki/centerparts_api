@@ -6,10 +6,10 @@ export class RemoveFriendController {
 
   async handle(request: Request, response: Response): Promise<Response> {
     const { userId } = request.body;
-    const { friendId } = request.params;
+    const { id } = request.params;
 
     try {
-      await this.removeFriendUseCase.execute({ userId, friendId });
+      await this.removeFriendUseCase.execute({ userId, friendId: id });
 
       return response.status(200).send();
     } catch (error: Error | any) {

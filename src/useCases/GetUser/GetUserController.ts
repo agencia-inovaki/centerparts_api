@@ -10,7 +10,7 @@ export class GetUserController {
     try {
       const user = await this.getUserUseCase.execute({ username });
 
-      return response.status(200).json({ user });
+      return response.status(200).json(user);
     } catch (error: Error | any) {
       return response
         .status(400)

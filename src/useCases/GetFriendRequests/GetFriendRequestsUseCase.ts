@@ -4,8 +4,8 @@ import { IGetFriendRequestsReqDTO } from './GetFriendRequestsDTO';
 
 export class GetFriendRequestsUseCase {
   constructor(
-    private friendsRepository: IFriendsRepository,
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    private friendsRepository: IFriendsRepository
   ) {}
 
   async execute(data: IGetFriendRequestsReqDTO) {

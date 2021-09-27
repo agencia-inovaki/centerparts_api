@@ -8,11 +8,11 @@ export class AcceptFriendUseCase {
     const { requestId } = data;
     if (isNaN(requestId)) throw new Error('Request id is invalid.');
 
-    const requestExists = await this.friendsRepository.findFriendRequestById(
+    const request = await this.friendsRepository.findOneFriendRequest(
       requestId
     );
-    if (!requestExists) throw new Error('Cannot find friend request.');
+    if (!request) throw new Error('Cannot find friend request.');
 
-    await this.friendsRepository.acceptFriendRequest(requestId);
+    await this.friendsRepository.acceptFriendRequest(request);
   }
 }

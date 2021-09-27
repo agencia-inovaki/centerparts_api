@@ -5,14 +5,14 @@ export class GetFriendRequestsController {
   constructor(private getFriendRequestsUseCase: GetFriendRequestsUseCase) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
-    const userId = request.params.id;
+    const { userId } = request.params;
 
     try {
       const friendRequestsList = await this.getFriendRequestsUseCase.execute({
         userId,
       });
 
-      return response.status(200).json({ friendRequestsList });
+      return response.status(200).json(friendRequestsList);
     } catch (error: Error | any) {
       return response
         .status(400)

@@ -5,63 +5,84 @@ import { knex } from '../../database/connection';
 import { Friendship } from '../../entities/Friendship';
 
 export class MySqlFriendsRepository implements IFriendsRepository {
+  private selectPublicUser: Array<string>;
+  private selectPublicFriend: Array<string>;
+  private selectFriendRequest: Array<string>;
+
+  constructor() {
+    this.selectPublicUser = [
+      'users.id',
+      'users.name',
+      'users.username',
+      'users.gender',
+      'users.biography',
+      'users.avatar_id',
+      'users.friends_count',
+    ];
+
+    this.selectPublicFriend = [
+      'friends.id',
+      'friends.name',
+      'friends.username',
+      'friends.gender',
+      'friends.biography',
+      'friends.avatar_id',
+      'friends.friends_count',
+    ];
+
+    this.selectFriendRequest = [
+      'friend_requests.id as request_id',
+      'sender.id as sender_id',
+      'sender.username as sender_username',
+      'receiver.id as receiver_id',
+      'receiver.username as receiver_username',
+    ];
+  }
+
   async findAllFriends(userId: string): Promise<Array<PublicUser>> {
-    const query = await knex('users_friends')
-      .select([
-        'friends.id as friend_id',
-        'friends.name as friend_name',
-        'friends.username as friend_username',
-        'friends.gender as friend_gender',
-        'friends.avatar_id as friend_avatar_id',
-        'friends.biography as friend_biography',
-        'friends.uploaded_recipes_count as friend_recipes_count',
-        'friends.friends_count as friend_friends_count',
-      ])
+    const query1 = await knex
+      .select(this.selectPublicFriend)
+      .from('users_friends')
       .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
       .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')
       .where('users_friends.user_id', userId);
 
-    return query;
+    const query2 = await knex
+      .select(this.selectPublicUser)
+      .from('users_friends')
+      .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
+      .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')
+      .where('users_friends.friend_id', userId);
+
+    return [...query1, ...query2] as Array<PublicUser>;
   }
 
   async findOneFriend(
     userId: string,
     friendUsername: string
-  ): Promise<PublicUser> {
-    const friendId = await knex('users')
+  ): Promise<PublicUser | null> {
+    const friendId = await knex
       .select(['users.id'])
-      .where({ username: friendUsername })
-      .first();
+      .from('users')
+      .where({ username: friendUsername });
 
-    const query = await knex('users_friends')
-      .select([
-        'friends.id as friend_id',
-        'friends.name as friend_name',
-        'friends.username as friend_username',
-        'friends.gender as friend_gender',
-        'friends.avatar_id as friend_avatar_id',
-        'friends.biography as friend_biography',
-        'friends.uploaded_recipes_count as friend_recipes_count',
-        'friends.friends_count as friend_friends_count',
-      ])
+    if (friendId.length === 0) return null;
+
+    const query = await knex
+      .select(this.selectPublicFriend)
+      .from('users_friends')
       .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
       .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')
       .where('users_friends.friend_id', friendId[0].id)
-      .andWhere('users_friends.user_id', userId)
-      .first();
+      .andWhere('users_friends.user_id', userId);
 
-    return query[0];
+    return query[0] as PublicUser;
   }
 
   async findAllFriendRequests(userId: string): Promise<Array<FriendRequest>> {
-    const query = await knex('friend_requests')
-      .select([
-        'friend_requests.id as request_id',
-        'sender.id as sender_id',
-        'sender.username as sender_username',
-        'receiver.id as receiver_id',
-        'receiver.username as receiver_username',
-      ])
+    const query = await knex
+      .select(this.selectFriendRequest)
+      .from('friend_requests')
       .innerJoin({ sender: 'users' }, 'sender.id', 'friend_requests.sender_id')
       .innerJoin(
         { receiver: 'users' },
@@ -70,67 +91,76 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       )
       .where('friend_requests.receiver_id', userId);
 
-    return query;
+    return query as Array<FriendRequest>;
   }
 
-  async findOneFriendRequest(requestId: number): Promise<FriendRequest> {
-    const query = await knex('friend_requests')
-      .select([
-        'friend_requests.id as request_id',
-        'sender.id as sender_id',
-        'sender.username as sender_username',
-        'receiver.id as receiver_id',
-        'receiver.username as receiver_username',
-      ])
+  async findOneFriendRequest(requestId: number): Promise<FriendRequest | null> {
+    const query = await knex
+      .select(this.selectFriendRequest)
+      .from('friend_requests')
       .innerJoin({ sender: 'users' }, 'sender.id', 'friend_requests.sender_id')
       .innerJoin(
         { receiver: 'users' },
         'receiver.id',
         'friend_requests.receiver_id'
       )
-      .where('friend_requests.id', requestId)
-      .first();
+      .where('friend_requests.id', requestId);
 
-    return query[0];
+    if (query.length === 0) return null;
+
+    return query[0] as FriendRequest;
   }
 
-  async findFriendship(userId: string, friendId: string): Promise<Friendship> {
-    const query = await knex('users_friends')
+  async findFriendship(
+    userId: string,
+    friendId: string
+  ): Promise<Friendship | null> {
+    const query = await knex
       .select([
         'users_friends.id as friendship_id',
         'users_friends.user_id',
         'users_friends.friend_id',
       ])
+      .from('users_friends')
       .where({ user_id: userId })
-      .andWhere({ friend_id: friendId })
-      .first();
+      .andWhere({ friend_id: friendId });
 
-    return query[0];
+    if (query.length === 0) return null;
+
+    return query[0] as Friendship;
   }
 
   async sendFriendRequest(senderId: string, receiverId: string): Promise<void> {
-    await knex('friend_requests').insert({
-      sender_id: senderId,
-      receiver_id: receiverId,
-    });
+    await knex
+      .insert({
+        sender_id: senderId,
+        receiver_id: receiverId,
+      })
+      .into('friend_requests');
   }
 
-  async acceptFriendRequest(requestId: number): Promise<void> {
-    const request = await this.findOneFriendRequest(requestId);
+  async acceptFriendRequest(request: FriendRequest): Promise<void> {
+    await knex
+      .insert({
+        user_id: request.sender_id,
+        friend_id: request.receiver_id,
+      })
+      .into('users_friends');
 
-    await knex('users_friends').insert({
-      user_id: request.receiver_id,
-      friend_id: request.sender_id,
-    });
+    await knex
+      .table('friend_requests')
+      .where({ id: request.request_id })
+      .delete();
   }
 
   async rejectFriendRequest(requestId: number): Promise<void> {
-    await knex('friend_requests')
+    await knex
+      .table('friend_requests')
       .where('friend_requests.id', requestId)
       .delete();
   }
 
   async removeFriend(friendshipId: number): Promise<void> {
-    await knex('users_friends').where({ id: friendshipId }).delete();
+    await knex.table('users_friends').where({ id: friendshipId }).delete();
   }
 }

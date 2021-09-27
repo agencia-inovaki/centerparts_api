@@ -2,6 +2,7 @@ import { MySqlUsersRepository } from '../../repositories/implementations/MySqlUs
 import { DeleteUserController } from './DeleteUserController';
 import { DeleteUserUseCase } from './DeleteUserUseCase';
 
+// implementations
 const mysqlUsersRepository = new MySqlUsersRepository();
 
 const deleteUserUseCase = new DeleteUserUseCase(mysqlUsersRepository);

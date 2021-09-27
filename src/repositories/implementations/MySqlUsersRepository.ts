@@ -8,112 +8,10 @@ import { IUsersRepository } from '../IUsersRepository';
 import { knex } from '../../database/connection';
 
 export class MySqlUsersRepository implements IUsersRepository {
-  async findAllFriends(userId: string): Promise<Array<PublicUser> | null> {
-    const query = await knex('users_friends')
-      .select([
-        'friends.id as friend_id',
-        'friends.name as friend_name',
-        'friends.username as friend_username',
-        'friends.gender as friend_gender',
-        'friends.biography as friend_biography',
-        'friends.avatar_id as friend_avatar_id',
-        'friends.friends_count as friend_friends_count',
-      ])
-      .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
-      .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')
-      .where('users_friends.user_id', userId);
+  private selectPublicUser: Array<string>;
 
-    if (!query) return null;
-
-    return query;
-  }
-
-  async findFriend(
-    userId: string,
-    friendId: string
-  ): Promise<PublicUser | null> {
-    const query = await knex('users_friends')
-      .select([
-        'friends.id as friend_id',
-        'friends.name as friend_name',
-        'friends.username as friend_username',
-        'friends.gender as friend_gender',
-        'friends.biography as friend_biography',
-        'friends.avatar_id as friend_avatar_id',
-        'friends.friends_count as friend_friends_count',
-      ])
-      .innerJoin({ friends: 'users' }, 'friends.id', 'users_friends.friend_id')
-      .innerJoin({ users: 'users' }, 'users.id', 'users_friends.user_id')
-      .where('users_friends.friend_id', friendId)
-      .andWhere('users_friends.user_id', userId)
-      .first();
-
-    if (!query) return null;
-
-    return query;
-  }
-
-  async findById(userId: string): Promise<PublicUser | null> {
-    const query = await knex<User>('users')
-      .select([
-        'users.id',
-        'users.name',
-        'users.username',
-        'users.gender',
-        'users.biography',
-        'users.avatar_id',
-        'users.friends_count',
-      ])
-      .where({ id: userId })
-      .first();
-
-    console.log(query);
-
-    if (!query) return null;
-
-    return query;
-  }
-
-  async findByEmail(email: string): Promise<PublicUser | null> {
-    const query = await knex<User>('users')
-      .select([
-        'users.id',
-        'users.name',
-        'users.username',
-        'users.gender',
-        'users.biography',
-        'users.avatar_id',
-        'users.friends_count',
-      ])
-      .where({ email })
-      .first();
-
-    if (!query) return null;
-
-    return query[0];
-  }
-
-  async findByUsername(username: string): Promise<PublicUser | null> {
-    const query = await knex<User>('users')
-      .select([
-        'users.id',
-        'users.name',
-        'users.username',
-        'users.gender',
-        'users.biography',
-        'users.avatar_id',
-        'users.friends_count',
-      ])
-      .where({ username })
-      .first();
-
-    if (!query) return null;
-
-    return query[0];
-  }
-
-  async findAll(): Promise<Array<PublicUser> | null> {
-    const query = await knex<User>('users').select([
+  constructor() {
+    this.selectPublicUser = [
       'users.id',
       'users.name',
       'users.username',
@@ -121,23 +19,59 @@ export class MySqlUsersRepository implements IUsersRepository {
       'users.biography',
       'users.avatar_id',
       'users.friends_count',
-    ]);
+    ];
+  }
 
-    if (!query) return null;
+  async findById(userId: string): Promise<PublicUser | null> {
+    const query = await knex
+      .select(this.selectPublicUser)
+      .from<User>('users')
+      .where({ id: userId });
 
-    return query[0];
+    if (query.length === 0) return null;
+
+    return query[0] as PublicUser;
+  }
+
+  async findByEmail(email: string): Promise<PublicUser | null> {
+    const query = await knex
+      .select(this.selectPublicUser)
+      .from<User>('users')
+      .where({ email });
+
+    if (query.length === 0) return null;
+
+    return query[0] as PublicUser;
+  }
+
+  async findByUsername(username: string): Promise<PublicUser | null> {
+    const query = await knex
+      .select(this.selectPublicUser)
+      .from<User>('users')
+      .where({ username });
+
+    if (query.length === 0) return null;
+
+    return query[0] as PublicUser;
+  }
+
+  async findAll(): Promise<Array<PublicUser>> {
+    const query = await knex.select(this.selectPublicUser).from<User>('users');
+
+    return query as Array<PublicUser>;
   }
 
   async create(user: CreatedUser): Promise<void> {
-    await knex<User>('users').insert(user);
+    await knex.insert(user).into('users');
   }
 
   async delete(userId: string): Promise<void> {
-    await knex<User>('users').where({ id: userId }).delete();
+    await knex.table<User>('users').where({ id: userId }).delete();
   }
 
   async update(userId: string, data: UpdatedUserFields): Promise<void> {
-    await knex<User>('users')
+    await knex
+      .table<User>('users')
       .where({ id: userId })
       .update({ ...data });
   }

@@ -4,15 +4,18 @@ import { PublicUser } from '../entities/User';
 
 export interface IFriendsRepository {
   findAllFriends(userId: string): Promise<Array<PublicUser>>;
-  findOneFriend(userId: string, friendUsername: string): Promise<PublicUser>;
+  findOneFriend(
+    userId: string,
+    friendUsername: string
+  ): Promise<PublicUser | null>;
 
   findAllFriendRequests(userId: string): Promise<Array<FriendRequest>>;
-  findOneFriendRequest(requestId: number): Promise<FriendRequest>;
+  findOneFriendRequest(requestId: number): Promise<FriendRequest | null>;
 
   sendFriendRequest(senderId: string, receiverId: string): Promise<void>;
-  acceptFriendRequest(requestId: number): Promise<void>;
+  acceptFriendRequest(request: FriendRequest): Promise<void>;
   rejectFriendRequest(requestId: number): Promise<void>;
 
-  findFriendship(userId: string, friendId: string): Promise<Friendship>;
+  findFriendship(userId: string, friendId: string): Promise<Friendship | null>;
   removeFriend(friendshipId: number): Promise<void>;
 }
