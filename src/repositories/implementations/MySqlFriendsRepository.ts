@@ -123,7 +123,9 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       ])
       .from('users_friends')
       .where({ user_id: userId })
-      .andWhere({ friend_id: friendId });
+      .andWhere({ friend_id: friendId })
+      .orWhere({ user_id: friendId })
+      .andWhere({ friend_id: userId });
 
     if (query.length === 0) return null;
 
@@ -137,6 +139,25 @@ export class MySqlFriendsRepository implements IFriendsRepository {
         receiver_id: receiverId,
       })
       .into('friend_requests');
+  }
+
+  async findFriendRequestByUsers(
+    senderId: string,
+    receiverId: string
+  ): Promise<number | null> {
+    const query = await knex
+      .select(['friend_requests.id'])
+      .from('friend_requests')
+      .where({
+        sender_id: senderId,
+      })
+      .andWhere({ receiver_id: receiverId })
+      .orWhere({ sender_id: receiverId })
+      .andWhere({ receiver_id: senderId });
+
+    if (query.length === 0) return null;
+
+    return query[0];
   }
 
   async acceptFriendRequest(request: FriendRequest): Promise<void> {

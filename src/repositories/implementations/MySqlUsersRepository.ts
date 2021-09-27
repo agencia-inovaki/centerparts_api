@@ -55,6 +55,17 @@ export class MySqlUsersRepository implements IUsersRepository {
     return query[0] as PublicUser;
   }
 
+  async findUserForAuth(username: string): Promise<User | null> {
+    const query = await knex
+      .select('*')
+      .from<User>('users')
+      .where({ username });
+
+    if (query.length === 0) return null;
+
+    return query[0] as User;
+  }
+
   async findAll(): Promise<Array<PublicUser>> {
     const query = await knex.select(this.selectPublicUser).from<User>('users');
 

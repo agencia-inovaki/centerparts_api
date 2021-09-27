@@ -1,4 +1,5 @@
 import { uuid } from 'uuidv4';
+import bcrypt from 'bcrypt';
 
 export class CreatedUser {
   public readonly id: string;
@@ -15,6 +16,7 @@ export class CreatedUser {
 
     this.id = uuid();
     this.avatar_id = Math.floor(Math.random() * (11 - 1) + 1);
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10));
   }
 }
 

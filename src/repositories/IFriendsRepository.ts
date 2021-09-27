@@ -17,5 +17,9 @@ export interface IFriendsRepository {
   rejectFriendRequest(requestId: number): Promise<void>;
 
   findFriendship(userId: string, friendId: string): Promise<Friendship | null>;
+  findFriendRequestByUsers(
+    senderId: string,
+    receiverId: string
+  ): Promise<number | null>;
   removeFriend(friendshipId: number): Promise<void>;
 }

@@ -1,6 +1,8 @@
-import express, { request, response } from 'express';
+import express from 'express';
+import { auth } from './middleware/auth';
 import { acceptFriendController } from './useCases/AcceptFriend';
 import { addFriendController } from './useCases/AddFriend';
+import { authenticationController } from './useCases/Authentication';
 import { createUserController } from './useCases/CreateUser';
 import { deleteUserController } from './useCases/DeleteUser';
 import { getFriendRequestsController } from './useCases/GetFriendRequests';
@@ -16,34 +18,33 @@ router
   .post('/user', (request, response) =>
     createUserController.handle(request, response)
   )
-  .delete('/user/:id', (request, response) =>
+  .delete('/user/:id', auth, (request, response) =>
     deleteUserController.handle(request, response)
   )
-  .put('/user/:id', (request, response) =>
+  .put('/user/:id', auth, (request, response) =>
     updateUserController.handle(request, response)
   )
-  .get('/user/:username', (request, response) =>
+  .get('/user/:username', auth, (request, response) =>
     getUserController.handle(request, response)
   )
-  .post('/friendRequest', (request, response) =>
+  .post('/friendRequest', auth, (request, response) =>
     addFriendController.handle(request, response)
   )
-  .get('/friendRequests/:userId', (request, response) =>
+  .get('/friendRequests/:userId', auth, (request, response) =>
     getFriendRequestsController.handle(request, response)
   )
-  .post('/acceptFriendRequest/:requestId', (request, response) =>
+  .post('/acceptFriendRequest/:requestId', auth, (request, response) =>
     acceptFriendController.handle(request, response)
   )
-  .post('/rejectFriendRequest/:requestId', (request, response) =>
+  .post('/rejectFriendRequest/:requestId', auth, (request, response) =>
     rejectFriendController.handle(request, response)
   )
-  .get('/friendsList/:userId', (request, response) =>
+  .get('/friendsList/:userId', auth, (request, response) =>
     getFriendsListController.handle(request, response)
   )
-  .delete('/friend/:id', (request, response) =>
+  .delete('/friend/:id', auth, (request, response) =>
     removeFriendController.handle(request, response)
+  )
+  .get('/authenticate', (request, response) =>
+    authenticationController.handle(request, response)
   );
-
-// .delete('/user/:id', deleteUser)
-// .get('/users', getUsers)
-// .get('/user/:username', getUser);
