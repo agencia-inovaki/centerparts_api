@@ -15,23 +15,19 @@ export class AuthenticationUseCase {
 
     const { username, password } = data;
 
-    const user = await this.usersRepository.findUserForAuth(username);
+    const user = await this.usersRepository.findToAuthenticate(username);
     if (!user) throw new Error('Username wrong. Please try again.');
-
-    console.log(user);
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect)
       throw new Error('Password wrong. Please try again.');
 
     const userData = {
-      id: user.id,
+      id: user.user_id,
       name: user.name,
       username: user.username,
       gender: user.gender,
       biography: user.biography,
-      avatar_id: user.avatar_id,
-      friends_count: user.friends_count,
     };
 
     const token = jwt.sign(userData, JWT_SECRET, JWT_EXPIRATION);

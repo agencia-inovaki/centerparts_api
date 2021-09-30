@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { request, response } from 'express';
+import multer from 'multer';
 import { auth } from './middleware/auth';
 import { acceptFriendController } from './useCases/AcceptFriend';
 import { addFriendController } from './useCases/AddFriend';
@@ -11,6 +12,7 @@ import { getUserController } from './useCases/GetUser';
 import { rejectFriendController } from './useCases/RejectFriend';
 import { removeFriendController } from './useCases/RemoveFriend';
 import { updateUserController } from './useCases/UpdateUser';
+import { options } from './config/multer';
 
 export const router = express.Router();
 
@@ -47,4 +49,12 @@ router
   )
   .get('/authenticate', (request, response) =>
     authenticationController.handle(request, response)
+  )
+  .post(
+    '/recipe',
+    multer(options).single('recipe-photo'),
+    (request, response) => {
+      console.log(request.body);
+      console.log(request.file);
+    }
   );
