@@ -13,6 +13,8 @@ import { rejectFriendController } from './useCases/RejectFriend';
 import { removeFriendController } from './useCases/RemoveFriend';
 import { updateUserController } from './useCases/UpdateUser';
 import { options } from './config/multer';
+import { createRecipeController } from './useCases/Recipes/CreateRecipe';
+import { MySqlRecipesRepository } from './repositories/implementations/MySqlRecipesRepository';
 
 export const router = express.Router();
 
@@ -54,7 +56,6 @@ router
     '/recipe',
     multer(options).single('recipe-photo'),
     (request, response) => {
-      console.log(request.body);
-      console.log(request.file);
+      createRecipeController.handle(request, response);
     }
   );

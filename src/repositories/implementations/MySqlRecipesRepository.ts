@@ -1,6 +1,7 @@
 import { knex } from '../../database/connection';
 import { CreateRecipeRequest } from '../../entities/Recipe';
 import { IRecipesRepository } from '../IRecipesRepository';
+import { formatRecipes } from '../../utils/formatRecipes';
 
 export class MySqlRecipesRepository implements IRecipesRepository {
   private selectRecipe: Array<string>;
@@ -12,25 +13,83 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       'recipes.servings',
       'recipes.ready_in_minutes',
       'recipes.author_id',
-      '',
+      'recipe_ingredients.recipe_id',
+      'recipe_ingredients.name',
+      'recipe_ingredients.unit',
+      'recipe_ingredients.amount',
+      'recipe_instructions.recipe_id',
+      'recipe_instructions.step_number',
+      'recipe_instructions.step',
+      'recipe_image.recipe_id',
+      'recipe_image.path',
+      'recipe_image.key',
     ];
   }
 
-  async getAll(): Promise<Array<CreateRecipeRequest>> {
-    await knex
-      .select('*')
+  async getAll(): Promise<Array<any>> {
+    const query = await knex
+      .select(this.selectRecipe)
       .from('recipes')
-      .innerJoin(
+      .join(
         'recipe_ingredients',
         'recipes.recipe_id',
         'recipe_ingredients.recipe_id'
       )
-      .innerJoin(
+      .join(
         'recipe_instructions',
         'recipes.recipe_id',
         'recipe_instructions.recipe_id'
       )
-      .innerJoin('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id');
+      .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
+      .options({ nestTables: true });
+
+    const response = formatRecipes(query);
+
+    return response;
+  }
+
+  async getAllByAuthor(authorId: string): Promise<Array<any>> {
+    const query = await knex
+      .select(this.selectRecipe)
+      .from('recipes')
+      .join(
+        'recipe_ingredients',
+        'recipes.recipe_id',
+        'recipe_ingredients.recipe_id'
+      )
+      .join(
+        'recipe_instructions',
+        'recipes.recipe_id',
+        'recipe_instructions.recipe_id'
+      )
+      .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
+      .where({ author_id: authorId })
+      .options({ nestTables: true });
+    const response = formatRecipes(query);
+
+    return response;
+  }
+
+  async getOne(recipeId: string): Promise<any | null> {
+    const query = await knex
+      .select(this.selectRecipe)
+      .from('recipes')
+      .join(
+        'recipe_ingredients',
+        'recipes.recipe_id',
+        'recipe_ingredients.recipe_id'
+      )
+      .join(
+        'recipe_instructions',
+        'recipes.recipe_id',
+        'recipe_instructions.recipe_id'
+      )
+      .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
+      .where('recipes.recipe_id', recipeId)
+      .options({ nestTables: true });
+    const response = formatRecipes(query);
+
+    return response;
   }
 
   async create(recipe: CreateRecipeRequest): Promise<void> {
@@ -75,5 +134,9 @@ export class MySqlRecipesRepository implements IRecipesRepository {
         })
         .into('recipe_instructions');
     });
+  }
+
+  async delete(recipeId: string): Promise<void> {
+    await knex.table('recipes').where({ recipe_id: recipeId }).delete();
   }
 }

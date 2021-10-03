@@ -1,4 +1,5 @@
 import { Response, Request } from 'express';
+import { Ingredients, Instructions } from './CreateRecipeDTO';
 import { CreateRecipeUseCase } from './CreateRecipeUseCase';
 
 export class CreateRecipeController {
@@ -7,24 +8,38 @@ export class CreateRecipeController {
   async handle(request: Request, response: Response): Promise<Response> {
     if (!request.file) throw new Error('Cannot find recipe photo.');
 
-    const key = request.file.originalname;
-    const {
-      title,
-      servings,
-      ready_in_minutes,
-      ingredients,
-      instructions,
-      author_id,
-    } = request.body;
+    const { title, author_id } = request.body;
+    const imageKey = request.file.filename;
+    const servings = +request.body.servings;
+    const ready_in_minutes = +request.body.ready_in_minutes;
+
+    const ingredients: Array<any> = JSON.parse(request.body.ingredients);
+    const instructions: Array<any> = JSON.parse(request.body.instructions);
+
+    const newIngredients: Array<Ingredients> = ingredients.map(ingredient => {
+      return {
+        name: ingredient.name,
+        unit: ingredient.unit,
+        amount: +ingredient.amount,
+      };
+    });
+    const newInstructions: Array<Instructions> = instructions.map(
+      (instruction, index) => {
+        return {
+          step_number: index + 1,
+          step: instruction.step,
+        };
+      }
+    );
 
     try {
       await this.createRecipeUseCase.execute({
         title,
         servings,
         ready_in_minutes,
-        ingredients,
-        instructions,
-        image: { key: key },
+        ingredients: newIngredients,
+        instructions: newInstructions,
+        image: { key: imageKey },
         author_id,
       });
 

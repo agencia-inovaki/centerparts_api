@@ -7,7 +7,14 @@ export class CreateUserUseCase {
 
   async execute(data: ICreateUserRequestDTO) {
     Object.entries(data).map(data => {
-      if (!data[1].replace(/\s+/g, '')) throw new Error('Fields are invalid.');
+      if (typeof data[1] === 'string') {
+        if (!data[1].replace(/\s+/g, ''))
+          throw new Error('Fields are invalid.');
+      }
+
+      if (typeof data[1] === 'number') {
+        if (isNaN(data[1])) throw new Error('Fields are invalid.');
+      }
     });
 
     const emailAlreadyExists = await this.usersRepository.findByEmail(

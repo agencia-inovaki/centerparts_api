@@ -41,7 +41,7 @@ export class CreatedUser {
   public password: string;
   public gender: number;
 
-  constructor(props: Omit<CreatedUser, 'id'>) {
+  constructor(props: Omit<CreatedUser, 'user_id'>) {
     Object.assign(this, props);
 
     this.user_id = uuid();

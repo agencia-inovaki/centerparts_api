@@ -16,6 +16,8 @@ export class CreateRecipeUseCase {
   ) {}
 
   async execute(data: ICreateRecipeRequestDTO) {
+    console.log(data);
+
     // data validation
     Object.entries(data).map(data => {
       if (typeof data[1] === 'string' && !data[1].replace(/\s+/g, ''))

@@ -170,7 +170,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
 
     await knex
       .table('friend_requests')
-      .where({ id: request.request_id })
+      .where({ request_id: request.request_id })
       .delete();
   }
 

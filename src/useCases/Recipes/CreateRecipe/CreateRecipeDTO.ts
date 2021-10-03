@@ -1,9 +1,9 @@
-interface Instructions {
+export interface Instructions {
   step_number: number;
   step: string;
 }
 
-interface Ingredients {
+export interface Ingredients {
   name: string;
   unit: string;
   amount: number;

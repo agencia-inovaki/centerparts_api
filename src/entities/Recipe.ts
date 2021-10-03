@@ -63,7 +63,7 @@ export class RecipeImage {
 }
 
 export class CreateRecipeRequest {
-  public readonly recipe_id: string;
+  public recipe_id: string;
 
   public title: string;
   public servings: number;
