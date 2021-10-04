@@ -1,10 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export default {
   development: {
-    client: 'mysql',
+    client: process.env.DB_CLIENT,
     connection: {
-      database: 'foodie',
-      user: 'root',
-      password: 'dev123',
+      database: process.env.DB_DATABASE_NAME,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
     },
     migrations: {
       tableName: 'knex_migrations',

@@ -7,9 +7,11 @@ import { RecipeIngredients } from './src/models/RecipeIngredients';
 import { RecipeInstructions } from './src/models/RecipeInstructions';
 import { RecipeImage } from './src/models/RecipeImage';
 
-declare namespace Express {
-  export interface Request {
-    data: Object<any>;
+declare global {
+  namespace Express {
+    export interface Request {
+      customData: any;
+    }
   }
 }
 

@@ -5,5 +5,4 @@ export interface RecipeImage {
   recipe_id: string;
 
   created_at: string;
-  updated_at: string;
 }

@@ -1,5 +1,5 @@
 export class FriendRequest {
-  public readonly request_id: number;
+  public readonly request_id: string;
 
   public sender_id: string;
   public sender_username: string;

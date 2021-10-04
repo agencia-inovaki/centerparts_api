@@ -11,9 +11,6 @@ export class User {
   public gender: number;
   public biography: string;
 
-  public created_at: string;
-  public updated_at: string;
-
   constructor(props: User) {
     Object.assign(this, props);
   }
@@ -32,7 +29,22 @@ export class PublicUser {
   }
 }
 
-export class CreatedUser {
+export class ProfileImage {
+  public readonly image_id: string;
+
+  public key: string;
+  public path: string;
+  public user_id: string;
+
+  constructor(props: Omit<ProfileImage, 'image_id' | 'path'>) {
+    Object.assign(this, props);
+
+    this.image_id = uuid();
+    this.path = `${process.env.APP_URL}/uploads/${this.key}`;
+  }
+}
+
+export class CreateUserRequest {
   public readonly user_id: string;
 
   public name: string;
@@ -41,7 +53,7 @@ export class CreatedUser {
   public password: string;
   public gender: number;
 
-  constructor(props: Omit<CreatedUser, 'user_id'>) {
+  constructor(props: Omit<CreateUserRequest, 'user_id'>) {
     Object.assign(this, props);
 
     this.user_id = uuid();
@@ -49,11 +61,12 @@ export class CreatedUser {
   }
 }
 
-export class UpdatedUser {
+export class UpdateUserRequest {
   public name: string;
   public biography: string;
+  public image: ProfileImage | null;
 
-  constructor(props: UpdatedUser) {
+  constructor(props: UpdateUserRequest) {
     Object.assign(this, props);
   }
 }

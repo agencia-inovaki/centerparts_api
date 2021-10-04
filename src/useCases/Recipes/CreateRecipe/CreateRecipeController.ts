@@ -24,9 +24,9 @@ export class CreateRecipeController {
       };
     });
     const newInstructions: Array<Instructions> = instructions.map(
-      (instruction, index) => {
+      instruction => {
         return {
-          step_number: index + 1,
+          step_number: instruction.step_number,
           step: instruction.step,
         };
       }

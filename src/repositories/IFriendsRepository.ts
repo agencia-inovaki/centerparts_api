@@ -21,5 +21,5 @@ export interface IFriendsRepository {
     senderId: string,
     receiverId: string
   ): Promise<number | null>;
-  removeFriend(friendshipId: number): Promise<void>;
+  removeFriend(friendshipId: string): Promise<void>;
 }

@@ -1,12 +1,15 @@
 import {
-  CreatedUser,
+  CreateUserRequest,
   User,
   PublicUser,
-  UpdatedUser,
+  UpdateUserRequest,
+  ProfileImage,
 } from '../../entities/User';
 import { IUsersRepository } from '../IUsersRepository';
 import { knex } from '../../database/connection';
 
+// OBS: use entities to create the data to send
+// instead of returning queries without formatting, if you don't know the right format
 export class MySqlUsersRepository implements IUsersRepository {
   private selectPublicUser: Array<string>;
 
@@ -17,6 +20,7 @@ export class MySqlUsersRepository implements IUsersRepository {
       'users.username',
       'users.gender',
       'users.biography',
+      'profile_image.path as image',
     ];
   }
 
@@ -24,11 +28,11 @@ export class MySqlUsersRepository implements IUsersRepository {
     const query = await knex
       .select(this.selectPublicUser)
       .from('users')
+      .join('profile_image', 'users.user_id', 'profile_image.user_id')
       .where({ user_id: userId })
       .first();
 
     if (!query) return null;
-
     return query;
   }
 
@@ -36,11 +40,11 @@ export class MySqlUsersRepository implements IUsersRepository {
     const query = await knex
       .select(this.selectPublicUser)
       .from('users')
+      .join('profile_image', 'users.user_id', 'profile_image.user_id')
       .where({ email })
       .first();
 
     if (!query) return null;
-
     return query;
   }
 
@@ -48,11 +52,11 @@ export class MySqlUsersRepository implements IUsersRepository {
     const query = await knex
       .select(this.selectPublicUser)
       .from('users')
+      .join('profile_image', 'users.user_id', 'profile_image.user_id')
       .where({ username })
       .first();
 
     if (!query) return null;
-
     return query;
   }
 
@@ -64,28 +68,41 @@ export class MySqlUsersRepository implements IUsersRepository {
       .first();
 
     if (!query) return null;
-
     return query;
   }
 
   async findAll(): Promise<Array<PublicUser>> {
-    const query = await knex.select(this.selectPublicUser).from('users');
-
+    const query = await knex
+      .select(this.selectPublicUser)
+      .from('users')
+      .join('profile_image', 'users.user_id', 'profile_image.user_id');
     return query;
   }
 
-  async create(user: CreatedUser): Promise<void> {
+  async create(
+    user: CreateUserRequest,
+    userPhoto: ProfileImage
+  ): Promise<void> {
     await knex.insert(user).into('users');
+    await knex.insert(userPhoto).into('profile_image');
   }
 
   async delete(userId: string): Promise<void> {
     await knex.table('users').where({ user_id: userId }).delete();
   }
 
-  async update(userId: string, data: UpdatedUser): Promise<void> {
+  async update(userId: string, data: UpdateUserRequest): Promise<void> {
     await knex
       .table('users')
       .where({ user_id: userId })
-      .update({ ...data });
+      .update({ name: data.name, biography: data.biography });
+
+    if (data.image) {
+      await knex.table('profile_image').where({ user_id: userId }).delete();
+      await knex
+        .insert(data.image)
+        .into('profile_image')
+        .where({ user_id: userId });
+    }
   }
 }

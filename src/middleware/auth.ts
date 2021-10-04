@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Response, Request, NextFunction } from 'express';
-import { JWT_SECRET } from '../config';
+import { JWT_SECRET } from '../config/jwt';
 
 export function auth(request: Request, response: Response, next: NextFunction) {
   const authToken = request.headers.authorization;
@@ -18,8 +18,8 @@ export function auth(request: Request, response: Response, next: NextFunction) {
         .status(401)
         .json({ message: error.message || 'Invalid token.' });
 
-    request.data.token = token;
-    request.data.loggedUser = data;
+    request.customData.token = token;
+    request.customData.loggedUser = data;
     next();
   });
 }

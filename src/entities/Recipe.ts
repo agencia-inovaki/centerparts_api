@@ -55,14 +55,15 @@ export class RecipeImage {
 
   public recipe_id: string;
 
-  constructor(props: Omit<RecipeImage, 'image_id'>) {
+  constructor(props: Omit<RecipeImage, 'image_id' | 'path'>) {
     Object.assign(this, props);
 
     this.image_id = uuid();
+    this.path = `${process.env.APP_URL}/uploads/${this.key}`;
   }
 }
 
-export class CreateRecipeRequest {
+export class RecipeRequest {
   public recipe_id: string;
 
   public title: string;
@@ -75,7 +76,7 @@ export class CreateRecipeRequest {
 
   public author_id: string;
 
-  constructor(props: CreateRecipeRequest) {
+  constructor(props: RecipeRequest) {
     Object.assign(this, props);
   }
 }

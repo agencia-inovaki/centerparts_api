@@ -19,7 +19,6 @@ export async function up(knex: Knex): Promise<void> {
         .onDelete('CASCADE');
 
       table.timestamp('created_at').defaultTo(knex.fn.now());
-      table.timestamp('updated_at').defaultTo(knex.fn.now()); // set when updating data
     });
   });
 }

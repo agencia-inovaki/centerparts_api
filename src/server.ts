@@ -1,7 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import { router } from './routes';
+import dotenv from 'dotenv';
+import { userRouter, recipeRouter, friendshipRouter } from './routes';
+
+dotenv.config();
 
 const app = express();
 
@@ -12,6 +15,6 @@ app.use(
   '/uploads',
   express.static(path.join(__dirname, '..', 'tmp', 'uploads'))
 );
-app.use(router);
+app.use(userRouter, recipeRouter, friendshipRouter);
 
-app.listen(7070);
+app.listen(process.env.PORT || 7070);

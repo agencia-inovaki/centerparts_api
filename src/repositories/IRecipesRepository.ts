@@ -1,10 +1,10 @@
-import { CreateRecipeRequest } from '../entities/Recipe';
+import { RecipeRequest } from '../entities/Recipe';
 
 export interface IRecipesRepository {
-  getAll(): Promise<Array<CreateRecipeRequest>>;
-  getAllByAuthor(authorId: string): Promise<Array<CreateRecipeRequest>>;
-  getOne(recipeId: string): Promise<CreateRecipeRequest | null>;
+  getAll(): Promise<Array<RecipeRequest>>;
+  getAllByAuthor(authorId: string): Promise<Array<RecipeRequest>>;
+  getOne(recipeId: string): Promise<RecipeRequest | null>;
 
-  create(recipe: CreateRecipeRequest): Promise<void>;
+  create(recipe: RecipeRequest): Promise<void>;
   delete(recipeId: string): Promise<void>;
 }

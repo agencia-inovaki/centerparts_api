@@ -1,4 +1,9 @@
-import { CreatedUser, PublicUser, UpdatedUser } from '../entities/User';
+import {
+  CreateUserRequest,
+  ProfileImage,
+  PublicUser,
+  UpdateUserRequest,
+} from '../entities/User';
 import { User } from '../entities/User';
 
 export interface IUsersRepository {
@@ -8,7 +13,7 @@ export interface IUsersRepository {
   findByUsername(username: string): Promise<PublicUser | null>;
   findToAuthenticate(username: string): Promise<User | null>;
 
-  create(user: CreatedUser): Promise<void>;
+  create(user: CreateUserRequest, userPhoto: ProfileImage): Promise<void>;
   delete(userId: string): Promise<void>;
-  update(userId: string, data: UpdatedUser): Promise<void>;
+  update(userId: string, data: UpdateUserRequest): Promise<void>;
 }

@@ -1,5 +1,5 @@
 import { knex } from '../../database/connection';
-import { CreateRecipeRequest } from '../../entities/Recipe';
+import { RecipeRequest } from '../../entities/Recipe';
 import { IRecipesRepository } from '../IRecipesRepository';
 import { formatRecipes } from '../../utils/formatRecipes';
 
@@ -44,7 +44,6 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       .options({ nestTables: true });
 
     const response = formatRecipes(query);
-
     return response;
   }
 
@@ -65,8 +64,8 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
       .where({ author_id: authorId })
       .options({ nestTables: true });
-    const response = formatRecipes(query);
 
+    const response = formatRecipes(query);
     return response;
   }
 
@@ -87,12 +86,12 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
       .where('recipes.recipe_id', recipeId)
       .options({ nestTables: true });
-    const response = formatRecipes(query);
 
+    const response = formatRecipes(query);
     return response;
   }
 
-  async create(recipe: CreateRecipeRequest): Promise<void> {
+  async create(recipe: RecipeRequest): Promise<void> {
     await knex
       .insert({
         recipe_id: recipe.recipe_id,

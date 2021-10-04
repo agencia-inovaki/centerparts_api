@@ -1,5 +1,5 @@
 import {
-  CreateRecipeRequest,
+  RecipeRequest,
   Recipe,
   RecipeImage,
   RecipeIngredients,
@@ -94,11 +94,10 @@ export class CreateRecipeUseCase {
 
     const recipeImage = new RecipeImage({
       key: data.image.key,
-      path: `${process.env.APP_URL}/uploads/${data.image.key}`,
       recipe_id: recipe.recipe_id,
     });
 
-    const recipeRequest = new CreateRecipeRequest({
+    const recipeRequest = new RecipeRequest({
       ...recipe,
       ingredients: recipeIngredients,
       instructions: recipeInstructions,
