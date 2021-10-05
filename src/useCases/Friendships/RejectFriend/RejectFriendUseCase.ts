@@ -5,14 +5,14 @@ export class RejectFriendUseCase {
   constructor(private friendsRepository: IFriendsRepository) {}
 
   async execute(data: IRejectFriendRequestDTO) {
-    const { requestId } = data;
-    if (isNaN(requestId)) throw new Error('Request id is invalid.');
+    if (!data.requestId.replace(/\s+/g, ''))
+      throw new Error('Request id is invalid.');
 
     const requestExists = await this.friendsRepository.findOneFriendRequest(
-      requestId
+      data.requestId
     );
     if (!requestExists) throw new Error('Cannot find friend request.');
 
-    await this.friendsRepository.rejectFriendRequest(requestId);
+    await this.friendsRepository.rejectFriendRequest(data.requestId);
   }
 }

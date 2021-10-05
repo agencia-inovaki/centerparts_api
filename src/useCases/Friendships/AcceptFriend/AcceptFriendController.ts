@@ -5,7 +5,7 @@ export class AcceptFriendController {
   constructor(private acceptFriendUseCase: AcceptFriendUseCase) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
-    const requestId = +request.params.requestId;
+    const requestId = request.params.requestId;
 
     try {
       await this.acceptFriendUseCase.execute({ requestId });

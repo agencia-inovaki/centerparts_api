@@ -1,3 +1,4 @@
+import { CreateFriendRequest } from '../../../entities/FriendRequest';
 import { IFriendsRepository } from '../../../repositories/IFriendsRepository';
 import { IUsersRepository } from '../../../repositories/IUsersRepository';
 import { IAddFriendRequestDTO } from './AddFriendDTO';
@@ -38,6 +39,10 @@ export class AddFriendUseCase {
     if (friendshipAlreadyExists)
       throw new Error('Both users are already friends.');
 
-    await this.friendsRepository.sendFriendRequest(senderId, receiverId);
+    const request = new CreateFriendRequest({
+      receiver_id: data.receiverId,
+      sender_id: data.senderId,
+    });
+    await this.friendsRepository.sendFriendRequest(request);
   }
 }

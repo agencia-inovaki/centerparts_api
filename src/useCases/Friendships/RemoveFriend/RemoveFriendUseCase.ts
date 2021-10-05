@@ -13,6 +13,7 @@ export class RemoveFriendUseCase {
       data.userId,
       data.friendId
     );
+
     if (!friendship)
       throw new Error('Cannot find friendship with the current data.');
 

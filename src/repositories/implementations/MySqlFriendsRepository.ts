@@ -1,4 +1,8 @@
-import { FriendRequest } from '../../entities/FriendRequest';
+import {
+  CreateFriendRequest,
+  CreateFriendship,
+  FriendRequest,
+} from '../../entities/FriendRequest';
 import { PublicUser } from '../../entities/User';
 import { IFriendsRepository } from '../IFriendsRepository';
 import { knex } from '../../database/connection';
@@ -30,10 +34,10 @@ export class MySqlFriendsRepository implements IFriendsRepository {
 
     this.selectFriendRequest = [
       'friend_requests.request_id',
-      'sender.id as sender_id',
+      'sender.user_id as sender_id',
       'sender.username as sender_username',
-      'receiver.id as receiver_id',
-      'receiver.username as receiver_username',
+      'receiver.user_id as receiver_id',
+      'receiver.username as receiver_user_username',
     ];
   }
 
@@ -51,7 +55,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
         'users.user_id',
         'users_friends.user_one_id'
       )
-      .innerJoin('profile_image', 'users.user_id', 'profile_image.user_id')
+      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
       .where('users_friends.user_one_id', userId);
 
     const query2 = await knex
@@ -67,7 +71,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
         'users.user_id',
         'users_friends.user_one_id'
       )
-      .innerJoin('profile_image', 'users.user_id', 'profile_image.user_id')
+      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
       .where('users_friends.user_two_id', userId);
 
     return [...query1, ...query2];
@@ -80,9 +84,10 @@ export class MySqlFriendsRepository implements IFriendsRepository {
     const friendId = await knex
       .select(['users.user_id'])
       .from('users')
-      .where({ username: friendUsername });
+      .where({ username: friendUsername })
+      .first();
 
-    if (friendId.length === 0) return null;
+    if (!friendId) return null;
 
     const query = await knex
       .select(this.selectPublicFriend)
@@ -97,11 +102,12 @@ export class MySqlFriendsRepository implements IFriendsRepository {
         'users.user_id',
         'users_friends.user_one_id'
       )
-      .innerJoin('profile_image', 'users.user_id', 'profile_image.user_id')
-      .where('users_friends.user_two_id', friendId[0].user_id)
+      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
+      .where('users_friends.user_two_id', friendId.user_id)
       .andWhere('users_friends.user_one_id', userId)
       .first();
 
+    if (!query) return null;
     return query;
   }
 
@@ -124,7 +130,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
     return query;
   }
 
-  async findOneFriendRequest(requestId: number): Promise<FriendRequest | null> {
+  async findOneFriendRequest(requestId: string): Promise<FriendRequest | null> {
     const query = await knex
       .select(this.selectFriendRequest)
       .from('friend_requests')
@@ -141,7 +147,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       .where('friend_requests.request_id', requestId)
       .first();
 
-    if (query.length === 0) return null;
+    if (!query) return null;
     return query;
   }
 
@@ -162,17 +168,12 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       .andWhere({ user_two_id: userId })
       .first();
 
-    if (query.length === 0) return null;
+    if (!query) return null;
     return query;
   }
 
-  async sendFriendRequest(senderId: string, receiverId: string): Promise<void> {
-    await knex
-      .insert({
-        sender_id: senderId,
-        receiver_id: receiverId,
-      })
-      .into('friend_requests');
+  async sendFriendRequest(request: CreateFriendRequest): Promise<void> {
+    await knex.insert(request).into('friend_requests');
   }
 
   async findFriendRequestByUsers(
@@ -190,17 +191,15 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       .andWhere({ receiver_id: senderId })
       .first();
 
-    if (query.length === 0) return null;
+    if (!query) return null;
     return query;
   }
 
-  async acceptFriendRequest(request: FriendRequest): Promise<void> {
-    await knex
-      .insert({
-        user_id: request.sender_id,
-        friend_id: request.receiver_id,
-      })
-      .into('users_friends');
+  async acceptFriendRequest(
+    request: FriendRequest,
+    friendship: CreateFriendship
+  ): Promise<void> {
+    await knex.insert(friendship).into('users_friends');
 
     await knex
       .table('friend_requests')
@@ -208,7 +207,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       .delete();
   }
 
-  async rejectFriendRequest(requestId: number): Promise<void> {
+  async rejectFriendRequest(requestId: string): Promise<void> {
     await knex
       .table('friend_requests')
       .where('friend_requests.request_id', requestId)

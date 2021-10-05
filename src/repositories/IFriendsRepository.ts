@@ -1,4 +1,8 @@
-import { FriendRequest } from '../entities/FriendRequest';
+import {
+  CreateFriendRequest,
+  CreateFriendship,
+  FriendRequest,
+} from '../entities/FriendRequest';
 import { Friendship } from '../entities/Friendship';
 import { PublicUser } from '../entities/User';
 
@@ -10,11 +14,14 @@ export interface IFriendsRepository {
   ): Promise<PublicUser | null>;
 
   findAllFriendRequests(userId: string): Promise<Array<FriendRequest>>;
-  findOneFriendRequest(requestId: number): Promise<FriendRequest | null>;
+  findOneFriendRequest(requestId: string): Promise<FriendRequest | null>;
 
-  sendFriendRequest(senderId: string, receiverId: string): Promise<void>;
-  acceptFriendRequest(request: FriendRequest): Promise<void>;
-  rejectFriendRequest(requestId: number): Promise<void>;
+  sendFriendRequest(request: CreateFriendRequest): Promise<void>;
+  acceptFriendRequest(
+    request: FriendRequest,
+    friendship: CreateFriendship
+  ): Promise<void>;
+  rejectFriendRequest(requestId: string): Promise<void>;
 
   findFriendship(userId: string, friendId: string): Promise<Friendship | null>;
   findFriendRequestByUsers(

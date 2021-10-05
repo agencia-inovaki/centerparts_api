@@ -27,7 +27,13 @@ export class CreateUserUseCase {
     );
     if (usernameAlreadyExists) throw new Error('Username already exists.');
 
-    const user = new CreateUserRequest(data);
+    const user = new CreateUserRequest({
+      name: data.name,
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      gender: data.gender,
+    });
     const userPhoto = new ProfileImage({
       key: data.imageKey,
       user_id: user.user_id,

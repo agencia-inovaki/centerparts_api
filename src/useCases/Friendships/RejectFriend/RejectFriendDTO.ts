@@ -1,3 +1,3 @@
 export interface IRejectFriendRequestDTO {
-  requestId: number;
+  requestId: string;
 }

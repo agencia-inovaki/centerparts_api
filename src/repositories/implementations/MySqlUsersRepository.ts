@@ -28,8 +28,8 @@ export class MySqlUsersRepository implements IUsersRepository {
     const query = await knex
       .select(this.selectPublicUser)
       .from('users')
-      .join('profile_image', 'users.user_id', 'profile_image.user_id')
-      .where({ user_id: userId })
+      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
+      .where('users.user_id', userId)
       .first();
 
     if (!query) return null;
@@ -40,8 +40,8 @@ export class MySqlUsersRepository implements IUsersRepository {
     const query = await knex
       .select(this.selectPublicUser)
       .from('users')
-      .join('profile_image', 'users.user_id', 'profile_image.user_id')
-      .where({ email })
+      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
+      .where('users.email', email)
       .first();
 
     if (!query) return null;
@@ -52,8 +52,8 @@ export class MySqlUsersRepository implements IUsersRepository {
     const query = await knex
       .select(this.selectPublicUser)
       .from('users')
-      .join('profile_image', 'users.user_id', 'profile_image.user_id')
-      .where({ username })
+      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
+      .where('users.username', username)
       .first();
 
     if (!query) return null;
@@ -99,10 +99,7 @@ export class MySqlUsersRepository implements IUsersRepository {
 
     if (data.image) {
       await knex.table('profile_image').where({ user_id: userId }).delete();
-      await knex
-        .insert(data.image)
-        .into('profile_image')
-        .where({ user_id: userId });
+      await knex.insert(data.image).into('profile_image');
     }
   }
 }

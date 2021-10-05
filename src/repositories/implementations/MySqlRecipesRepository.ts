@@ -62,7 +62,7 @@ export class MySqlRecipesRepository implements IRecipesRepository {
         'recipe_instructions.recipe_id'
       )
       .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
-      .where({ author_id: authorId })
+      .where('reicpes.author_id', authorId)
       .options({ nestTables: true });
 
     const response = formatRecipes(query);

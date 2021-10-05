@@ -1,3 +1,3 @@
 export interface IAcceptFriendRequestDTO {
-  requestId: number;
+  requestId: string;
 }
