@@ -22,7 +22,7 @@ Form enctype: multipart/form-data
   "gender": 1,
   "profile-photo": "file"
 }
-// Gender: 0 for woman, 1 for man and 2 for others
+// gender: 0 for woman, 1 for man and 2 for others
 ```
 
 ```json
@@ -35,3 +35,30 @@ Form enctype: multipart/form-data
   "message": "error message"
 }
 ```
+
+### Edit a user
+```
+PUT /user/:id
+Form enctype: multipart/form-data
+```
+
+```json
+// request body
+{
+  "name": "John",
+  "biography": "Your biography",
+  "profile-photo": "file"
+}
+```
+
+```json
+// response body, status: 200
+```
+
+```json
+// response body, status: 422
+{
+  "message": "error message"
+}
+```
+
