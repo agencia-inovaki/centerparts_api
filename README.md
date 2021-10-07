@@ -1,5 +1,5 @@
 # Foodie API
-Hey guys! I created this API with a single purpose... to make my foodie web app better with custom features, and for that reason I will provide data modeling so that you dont get out of the scope of the app and can get more knowledge :)
+Hey guys! I created this API with a single purpose... to make my foodie web app better with custom features 👉 [foodie client](github.com/danielpalmares/foodie)
 
 ## What will I find in this api?
 - SOLID principles
