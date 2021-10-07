@@ -1,12 +1,66 @@
 # Foodie API Documentation
+Hey guys! I created this API with a single purpose... to make my foodie web app better with custom features, and for that reason I will provide data modeling so that you dont get out of the scope of the app and can get more knowledge :)
 
-### Uploading images
+## What will I find in this api?
+- SOLID principles
+- User authentication with JWT
+- Package by feature archtecture
+- Image uploads with multer
+- Knex setup in typescript
+
+## Status
+It is already usable, but may find bugs
+
+---
+- [ ] Use more entities to create a more consistent query response
+- [ ] Make more tests
+- [ ] Improve entities archtecture
+---
+
+
+## Pre-requirements
+Before getting started, you will need to have installed in your machine these tools: 
+
+- [Git](https://git-scm.com) 
+- [Node JS](https://nodejs.org/en/)
+
+Besides that, it is a good idea to have a nice text editor like [VSCode](https://code.visualstudio.com/)
+
+## Instructions
+```bash
+# Open the cmd/terminal and clone this repository
+$ git clone <https://github.com/danielpalmares/foodie-backend>
+
+# Open the project folder 
+$ cd foodie-backend
+
+# Install the dependencies
+$ yarn
+
+# Run the application in development mode
+$ yarn dev
+
+# The server will start
+```
+
+## Tools
+These tools were used in the project:
+
+- Express
+- Typescript
+- Knexjs
+
+## Data modeling
+![Foodie data modeling](https://github.com/danielpalmares/foodie-back/blob/main/foodie-data-model.png)
+---
+
+## Uploading images
 ```
 Maximum size: 2mb
 Mimetypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif',]
 ```
 
-### Routes
+## Routes
 All routes need an **authorization header**, except 👇
 ```
 POST /user
@@ -431,6 +485,5 @@ GET /recipe/:id
 }
 ```
 
-
-
-
+## License
+This project is under the MIT license. See the archive [LICENSE](https://github.com/danielpalmares/foodie-backend/blob/main/LICENSE) for more details.
