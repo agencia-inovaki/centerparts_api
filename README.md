@@ -378,7 +378,7 @@ NOTE: use JSON.stringify() on ingredients and instructions array
 }
 ```
 
-## Delete a recipe
+### Delete a recipe
 ```
 DELETE /recipe/:id
 ```
@@ -394,7 +394,7 @@ DELETE /recipe/:id
 }
 ```
 
-## Get all recipes
+### Get all recipes
 ```
 GET /recipes
 ```
@@ -430,7 +430,7 @@ GET /recipes
 }
 ```
 
-## Get all my recipes
+### Get all my recipes
 ```
 GET /recipes/:userId
 ```
@@ -466,7 +466,7 @@ GET /recipes/:userId
 }
 ```
 
-## Get one recipe
+### Get one recipe
 ```
 GET /recipe/:id
 ```
