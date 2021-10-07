@@ -1,5 +1,5 @@
 # Foodie API
-Hey guys! I created this API with a single purpose... to make my foodie web app better with custom features 👉 [foodie client](github.com/danielpalmares/foodie)
+Hey guys! I created this API with a single purpose... to make my foodie web app better with custom features 👉 [foodie client](https://github.com/danielpalmares/foodie)
 
 ## What will I find in this api?
 - SOLID principles
