@@ -396,7 +396,7 @@ DELETE /recipe/:id
 
 ## Get all recipes
 ```
-GET /reicipes
+GET /recipes
 ```
 
 ```json
@@ -432,7 +432,7 @@ GET /reicipes
 
 ## Get all my recipes
 ```
-GET /reicipes/:userId
+GET /recipes/:userId
 ```
 
 ```json
@@ -498,5 +498,12 @@ GET /recipe/:id
 }
 ```
 
+```json
+// response body, status: 404
+{
+  "message": "error message"
+}
+```
+
 ## License
-This project is under the MIT license. See the archive [LICENSE](https://github.com/danielpalmares/foodie-backend/blob/main/LICENSE) for more details.
+This project is under the MIT license. See the archive [LICENSE](https://github.com/danielpalmares/foodie-backend/blob/main/LICENSE) for more details
