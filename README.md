@@ -10,7 +10,7 @@ Mimetypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif',]
 All routes need an **authorization header**, except 👇
 ```
 POST /user
-GET / authenticate
+GET /authenticate
 ```
 | **Header** | **Value** |
 |---------------|--------------|
