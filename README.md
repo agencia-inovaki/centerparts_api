@@ -1,4 +1,4 @@
-# Foodie API Documentation
+# Foodie API
 Hey guys! I created this API with a single purpose... to make my foodie web app better with custom features, and for that reason I will provide data modeling so that you dont get out of the scope of the app and can get more knowledge :)
 
 ## What will I find in this api?
@@ -7,6 +7,15 @@ Hey guys! I created this API with a single purpose... to make my foodie web app 
 - Package by feature archtecture
 - Image uploads with multer
 - Knex setup in typescript
+
+## API documentation
+- [Status](#status)
+- [Pre-requirements](#pre-requirements)
+- [Instructions](#instructions)
+- [Tools](#tools)
+- [Data modeling](#data-modeling)
+- [Uploading images](#uploading-images)
+- [Routes](#routes)
 
 ## Status
 It is already usable, but may find bugs
