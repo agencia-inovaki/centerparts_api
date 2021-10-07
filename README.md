@@ -16,6 +16,10 @@ Hey guys! I created this API with a single purpose... to make my foodie web app 
 - [Data modeling](#data-modeling)
 - [Uploading images](#uploading-images)
 - [Routes](#routes)
+  - [User routes](#user-related-routes)
+  - [Friendship routes](#friendship-related-routes)
+  - [Recipes routes](#recipe-related-routes)
+    
 
 ## Status
 It is already usable, but may find bugs
