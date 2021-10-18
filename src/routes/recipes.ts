@@ -18,14 +18,14 @@ recipeRouter
     (request, response) => {
       createRecipeController.handle(request, response);
     }
-  )
+  ) 
   .delete('/recipe/:id', auth, (request, response) => {
     deleteRecipeController.handle(request, response);
   })
   .get('/recipes', auth, (request, response) => {
     getAllRecipesController.handle(request, response);
   })
-  .get('/usersRecipes/:id', auth, (request, response) => {
+  .get('/recipes/:userId', auth, (request, response) => {
     getAllUsersRecipesController.handle(request, response);
   })
   .get('/recipe/:id', auth, (request, response) => {

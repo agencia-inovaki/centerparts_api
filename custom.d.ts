@@ -9,8 +9,8 @@ import { RecipeImage } from './src/models/RecipeImage';
 
 declare global {
   namespace Express {
-    export interface Request {
-      customData: any;
+    interface Request {
+      customData: {};
     }
   }
 }

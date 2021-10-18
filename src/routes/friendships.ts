@@ -16,10 +16,10 @@ friendshipRouter
   .get('/friendRequests/:userId', auth, (request, response) =>
     getFriendRequestsController.handle(request, response)
   )
-  .post('/acceptFriendRequest/:requestId', auth, (request, response) =>
+  .post('/friendship/:requestId', auth, (request, response) =>
     acceptFriendController.handle(request, response)
   )
-  .post('/rejectFriendRequest/:requestId', auth, (request, response) =>
+  .delete('/friendRequest/:requestId', auth, (request, response) =>
     rejectFriendController.handle(request, response)
   )
   .get('/friendsList/:userId', auth, (request, response) =>

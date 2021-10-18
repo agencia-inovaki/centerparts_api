@@ -11,6 +11,9 @@ import { updateUserController } from '../useCases/Users/UpdateUser';
 export const userRouter = express.Router();
 
 userRouter
+  .post('/authenticate', (request, response) =>
+    authenticationController.handle(request, response)
+  )
   .post('/user', multer(options).single('profile-photo'), (request, response) =>
     createUserController.handle(request, response)
   )
@@ -25,7 +28,4 @@ userRouter
   )
   .get('/user/:username', auth, (request, response) =>
     getUserController.handle(request, response)
-  )
-  .get('/authenticate', (request, response) =>
-    authenticationController.handle(request, response)
   );

@@ -17,7 +17,7 @@ export class UpdateUserController {
         imageKey,
       });
 
-      return response.status(200).send();
+      return response.status(201).send();
     } catch (error: Error | any) {
       return response
         .status(400)

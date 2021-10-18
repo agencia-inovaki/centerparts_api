@@ -16,7 +16,7 @@ export class AuthenticationController {
       return response.status(200).json({ token: userToken });
     } catch (error: Error | any) {
       return response
-        .status(400)
+        .status(422)
         .json({ message: error.message || 'Unexpected error.' });
     }
   }

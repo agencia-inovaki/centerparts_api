@@ -10,10 +10,10 @@ export class AddFriendController {
     try {
       await this.addFriendUseCase.execute({ senderId, receiverId });
 
-      return response.status(200).json({ message: 'Your request was sent!' });
+      return response.status(201).json({ message: 'Your request was sent!' });
     } catch (error: Error | any) {
       return response
-        .status(400)
+        .status(422)
         .json({ message: error.message || 'Unexpected error.' });
     }
   }

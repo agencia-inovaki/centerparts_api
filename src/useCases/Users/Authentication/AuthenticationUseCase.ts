@@ -27,7 +27,7 @@ export class AuthenticationUseCase {
       username: user.username,
     };
 
-    const token = jwt.sign(userData, JWT_SECRET, JWT_EXPIRATION);
+    const token = jwt.sign(userData, JWT_SECRET, { expiresIn: '48h' });
     return token;
   }
 }

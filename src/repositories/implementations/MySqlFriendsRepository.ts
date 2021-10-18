@@ -37,7 +37,7 @@ export class MySqlFriendsRepository implements IFriendsRepository {
       'sender.user_id as sender_id',
       'sender.username as sender_username',
       'receiver.user_id as receiver_id',
-      'receiver.username as receiver_user_username',
+      'receiver.username as receiver_username',
     ];
   }
 
