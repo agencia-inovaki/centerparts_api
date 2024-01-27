@@ -13,6 +13,7 @@ export async function up(knex: Knex): Promise<void> {
       table.string('password').notNullable();
       table.integer('gender').notNullable();
       table.string('biography');
+      table.string('profile_photo').notNullable();
 
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('updated_at').defaultTo(knex.fn.now()); // set when updating data

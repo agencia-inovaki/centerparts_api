@@ -52,6 +52,7 @@ export class CreateUserRequest {
   public email: string;
   public password: string;
   public gender: number;
+  public profile_photo: string;
 
   constructor(props: Omit<CreateUserRequest, 'user_id'>) {
     Object.assign(this, props);

@@ -4,5 +4,5 @@ export interface ICreateUserRequestDTO {
   email: string;
   password: string;
   gender: number;
-  imageKey: string;
+  profile_photo: string;
 }

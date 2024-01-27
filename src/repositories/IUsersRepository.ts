@@ -13,7 +13,7 @@ export interface IUsersRepository {
   findByUsername(username: string): Promise<PublicUser | null>;
   findToAuthenticate(username: string): Promise<User | null>;
 
-  create(user: CreateUserRequest, userPhoto: ProfileImage): Promise<void>;
+  create(user: CreateUserRequest): Promise<void>;
   delete(userId: string): Promise<void>;
   update(userId: string, data: UpdateUserRequest): Promise<void>;
 }

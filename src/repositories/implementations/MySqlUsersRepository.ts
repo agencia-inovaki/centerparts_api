@@ -81,10 +81,9 @@ export class MySqlUsersRepository implements IUsersRepository {
 
   async create(
     user: CreateUserRequest,
-    userPhoto: ProfileImage
   ): Promise<void> {
     await knex.insert(user).into('users');
-    await knex.insert(userPhoto).into('profile_image');
+    // await knex.insert(userPhoto).into('profile_image');
   }
 
   async delete(userId: string): Promise<void> {

@@ -33,12 +33,14 @@ export class CreateUserUseCase {
       email: data.email,
       password: data.password,
       gender: data.gender,
+      profile_photo: data.profile_photo
     });
-    const userPhoto = new ProfileImage({
-      key: data.imageKey,
-      user_id: user.user_id,
-    });
+    // const userPhoto = new ProfileImage({
+    //   key: data.imageKey,
+    //   user_id: user.user_id,
+    // });
 
-    await this.usersRepository.create(user, userPhoto);
+    // await this.usersRepository.create(user, userPhoto);
+    await this.usersRepository.create(user);
   }
 }
