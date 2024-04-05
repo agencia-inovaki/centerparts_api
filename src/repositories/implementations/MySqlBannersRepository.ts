@@ -1,12 +1,12 @@
-import { knex } from '../../database/connection';
-import { RecipeRequest } from '../../entities/Recipe';
-import { IRecipesRepository } from '../IRecipesRepository';
-import { formatRecipes } from '../../utils/formatRecipes';
+import { knex } from '../../database/connection'
+import { type RecipeRequest } from '../../entities/Recipe'
+import { type IRecipesRepository } from '../IRecipesRepository'
+import { formatRecipes } from '../../utils/formatRecipes'
 
-export class MySqlRecipesRepository implements IRecipesRepository {
-  private selectRecipe: Array<string>;
+export class MySqlBannersRepository implements IBannersRepository {
+  private readonly selectRecipe: string[]
 
-  constructor() {
+  constructor () {
     this.selectRecipe = [
       'recipes.recipe_id',
       'recipes.title',
@@ -22,11 +22,11 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       'recipe_instructions.step',
       'recipe_image.recipe_id',
       'recipe_image.path',
-      'recipe_image.key',
-    ];
+      'recipe_image.key'
+    ]
   }
 
-  async getAll(): Promise<Array<any>> {
+  async getAll (): Promise<any[]> {
     const query = await knex
       .select(this.selectRecipe)
       .from('recipes')
@@ -41,13 +41,13 @@ export class MySqlRecipesRepository implements IRecipesRepository {
         'recipe_instructions.recipe_id'
       )
       .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
-      .options({ nestTables: true });
+      .options({ nestTables: true })
 
-    const response = formatRecipes(query);
-    return response;
+    const response = formatRecipes(query)
+    return response
   }
 
-  async getAllByAuthor(authorId: string): Promise<Array<any>> {
+  async getAllByAuthor (authorId: string): Promise<any[]> {
     const query = await knex
       .select(this.selectRecipe)
       .from('recipes')
@@ -63,13 +63,13 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       )
       .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
       .where('reicpes.author_id', authorId)
-      .options({ nestTables: true });
+      .options({ nestTables: true })
 
-    const response = formatRecipes(query);
-    return response;
+    const response = formatRecipes(query)
+    return response
   }
 
-  async getOne(recipeId: string): Promise<any | null> {
+  async getOne (recipeId: string): Promise<any | null> {
     const query = await knex
       .select(this.selectRecipe)
       .from('recipes')
@@ -85,31 +85,31 @@ export class MySqlRecipesRepository implements IRecipesRepository {
       )
       .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
       .where('recipes.recipe_id', recipeId)
-      .options({ nestTables: true });
+      .options({ nestTables: true })
 
-    const response = formatRecipes(query);
-    return response;
+    const response = formatRecipes(query)
+    return response
   }
 
-  async create(recipe: RecipeRequest): Promise<void> {
+  async create (recipe: RecipeRequest): Promise<void> {
     await knex
       .insert({
         recipe_id: recipe.recipe_id,
         title: recipe.title,
         servings: recipe.servings,
         ready_in_minutes: recipe.ready_in_minutes,
-        author_id: recipe.author_id,
+        author_id: recipe.author_id
       })
-      .into('recipes');
+      .into('recipes')
 
     await knex
       .insert({
         image_id: recipe.image.image_id,
         key: recipe.image.key,
         path: recipe.image.path,
-        recipe_id: recipe.image.recipe_id,
+        recipe_id: recipe.image.recipe_id
       })
-      .into('recipe_image');
+      .into('recipe_image')
 
     recipe.ingredients.map(async ingredient => {
       await knex
@@ -118,10 +118,10 @@ export class MySqlRecipesRepository implements IRecipesRepository {
           name: ingredient.name,
           unit: ingredient.unit,
           amount: ingredient.amount,
-          recipe_id: ingredient.recipe_id,
+          recipe_id: ingredient.recipe_id
         })
-        .into('recipe_ingredients');
-    });
+        .into('recipe_ingredients')
+    })
 
     recipe.instructions.map(async instruction => {
       await knex
@@ -129,13 +129,13 @@ export class MySqlRecipesRepository implements IRecipesRepository {
           instruction_id: instruction.instruction_id,
           step_number: instruction.step_number,
           step: instruction.step,
-          recipe_id: instruction.recipe_id,
+          recipe_id: instruction.recipe_id
         })
-        .into('recipe_instructions');
-    });
+        .into('recipe_instructions')
+    })
   }
 
-  async delete(recipeId: string): Promise<void> {
-    await knex.table('recipes').where({ recipe_id: recipeId }).delete();
+  async delete (recipeId: string): Promise<void> {
+    await knex.table('recipes').where({ recipe_id: recipeId }).delete()
   }
 }
