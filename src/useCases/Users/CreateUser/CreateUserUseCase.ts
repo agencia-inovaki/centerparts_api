@@ -1,28 +1,27 @@
-import { IUsersRepository } from '../../../repositories/IUsersRepository';
-import { ICreateUserRequestDTO } from './CreateUserDTO';
-import { User } from '../../../entities/User';
+import { type IUsersRepository } from '../../../repositories/IUsersRepository'
+import { type ICreateUserRequestDTO } from './CreateUserDTO'
+import { User } from '../../../entities/User'
 
 export class CreateUserUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor (private readonly usersRepository: IUsersRepository) {}
 
-  async execute(data: ICreateUserRequestDTO) {
-    Object.entries(data).map(data => {
+  async execute (data: ICreateUserRequestDTO) {
+    Object.entries(data).forEach(data => {
       if (typeof data[1] === 'string') {
-        if (!data[1].replace(/\s+/g, ''))
-          throw new Error('Os campos estão inválidos.');
+        if (!data[1].replace(/\s+/g, '')) { throw new Error('Os campos estão inválidos.') }
       }
-    });
+    })
 
     const userData = await this.usersRepository.findByEmail(
       data.email
-    );
-    if (userData) throw new Error('Email já existente.');
+    )
+    if (userData) throw new Error('Email já existente.')
 
     const user = new User({
       email: data.email,
-      password: data.password,
-    }, undefined, true);
+      password: data.password
+    }, undefined, true)
 
-    await this.usersRepository.create(user);
+    await this.usersRepository.create(user)
   }
 }
