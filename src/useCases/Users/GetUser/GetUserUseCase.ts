@@ -1,16 +1,16 @@
-import { IUsersRepository } from '../../../repositories/IUsersRepository';
-import { IGetUserRequestDTO } from './GetUserDTO';
+import { type IUsersRepository } from '../../../repositories/IUsersRepository'
+import { type IGetUserRequestDTO } from './GetUserDTO'
 
 export class GetUserUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor (private readonly usersRepository: IUsersRepository) {}
 
-  async execute(data: IGetUserRequestDTO) {
-    const username = data.username.replace(/\s+/g, '');
-    if (!username) throw new Error('Username is invalid.');
+  async execute (data: IGetUserRequestDTO) {
+    const email = data.email.replace(/\s+/g, '')
+    if (!email) throw new Error('Email não válido.')
 
-    const user = await this.usersRepository.findByUsername(username);
-    if (!user) throw new Error('Cannot find user by username.');
+    const user = await this.usersRepository.findByEmail(email)
+    if (!user) throw new Error('Usuário não encontrado.')
 
-    return user;
+    return user
   }
 }

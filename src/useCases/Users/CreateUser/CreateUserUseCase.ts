@@ -22,6 +22,7 @@ export class CreateUserUseCase {
       password: data.password
     }, undefined, true)
 
-    await this.usersRepository.create(user)
+    const createdUser = await this.usersRepository.create(user)
+    return createdUser
   }
 }

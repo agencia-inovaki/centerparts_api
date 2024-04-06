@@ -1,26 +1,26 @@
-import { Request, Response } from 'express';
-import { CreateUserUseCase } from './CreateUserUseCase';
+import { type Request, type Response } from 'express'
+import { type CreateUserUseCase } from './CreateUserUseCase'
 
 export class CreateUserController {
-  constructor(private createUserUseCase: CreateUserUseCase) {}
+  constructor (private readonly createUserUseCase: CreateUserUseCase) {}
 
-  async handle(request: Request, response: Response): Promise<Response> {
+  async handle (request: Request, response: Response): Promise<Response> {
     // if (!request.file) throw new Error('Cannot find profile photo.');
 
-    const { email, password } = request.body;
+    const { email, password } = request.body
     // const imageKey = request.file.filename;
 
     try {
-      await this.createUserUseCase.execute({
+      const user = await this.createUserUseCase.execute({
         email,
         password
-      });
+      })
 
-      return response.status(201).send();
+      return response.status(201).json({ user })
     } catch (error: Error | any) {
       return response.status(400).json({
-        message: error.message || 'Unexpected error.',
-      });
+        message: error.message || 'Unexpected error.'
+      })
     }
   }
 }

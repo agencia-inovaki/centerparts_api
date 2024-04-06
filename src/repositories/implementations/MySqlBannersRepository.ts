@@ -1,6 +1,6 @@
 import { knex } from '../../database/connection'
-import { Banner, BannerImage, FullBanner } from '../../entities/Banner'
-import { IBannersRepository } from '../IBannersRepository'
+import { type Banner, type BannerImage, type FullBanner } from '../../entities/Banner'
+import { type IBannersRepository } from '../IBannersRepository'
 
 export class MySqlBannersRepository implements IBannersRepository {
   private readonly selectBanner: string[]
@@ -42,7 +42,7 @@ export class MySqlBannersRepository implements IBannersRepository {
   }
 
   async create (
-    banner: Banner, 
+    banner: Banner,
     bannerImage: Omit<BannerImage, 'banner_id'>
   ): Promise<FullBanner> {
     const insertedBanner = await knex
@@ -68,18 +68,17 @@ export class MySqlBannersRepository implements IBannersRepository {
       .returning('*')
       .first()
 
-    return {...insertedBanner, imageData: insertedImage}
-
+    return { ...insertedBanner, imageData: insertedImage }
   }
 
-  async update(
-    bannerId: string, 
+  async update (
+    bannerId: string,
     data: Partial<FullBanner>
   ): Promise<FullBanner> {
     const updatedBanner = await knex
       .table('banners')
       .where({ id: bannerId })
-      .update({ 
+      .update({
         title: data.title,
         position: data.position,
         redirect_url: data.redirect_url,
@@ -91,7 +90,7 @@ export class MySqlBannersRepository implements IBannersRepository {
     let insImage: Record<string, any> | null = null
 
     if (data.imageData) {
-      await knex.table('banner_images').where({ banner_id: bannerId }).delete();
+      await knex.table('banner_images').where({ banner_id: bannerId }).delete()
       const insertedImage = await knex
         .insert({
           id: data.imageData.id,
@@ -106,7 +105,7 @@ export class MySqlBannersRepository implements IBannersRepository {
       insImage = insertedImage
     }
 
-    return {...updatedBanner, imageData: insImage ?? updatedBanner.imageData}
+    return { ...updatedBanner, imageData: insImage ?? updatedBanner.imageData }
   }
 
   async delete (bannerId: string): Promise<void> {
