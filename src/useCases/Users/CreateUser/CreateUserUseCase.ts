@@ -1,6 +1,6 @@
 import { IUsersRepository } from '../../../repositories/IUsersRepository';
 import { ICreateUserRequestDTO } from './CreateUserDTO';
-import { CreateUserRequest, ProfileImage } from '../../../entities/User';
+import { User } from '../../../entities/User';
 
 export class CreateUserUseCase {
   constructor(private usersRepository: IUsersRepository) {}
@@ -9,38 +9,20 @@ export class CreateUserUseCase {
     Object.entries(data).map(data => {
       if (typeof data[1] === 'string') {
         if (!data[1].replace(/\s+/g, ''))
-          throw new Error('Fields are invalid.');
-      }
-
-      if (typeof data[1] === 'number') {
-        if (isNaN(data[1])) throw new Error('Fields are invalid.');
+          throw new Error('Os campos estão inválidos.');
       }
     });
 
-    const emailAlreadyExists = await this.usersRepository.findByEmail(
+    const userData = await this.usersRepository.findByEmail(
       data.email
     );
-    if (emailAlreadyExists) throw new Error('Email already exists.');
+    if (userData) throw new Error('Email já existente.');
 
-    const usernameAlreadyExists = await this.usersRepository.findByUsername(
-      data.username
-    );
-    if (usernameAlreadyExists) throw new Error('Username already exists.');
-
-    const user = new CreateUserRequest({
-      name: data.name,
-      username: data.username,
+    const user = new User({
       email: data.email,
       password: data.password,
-      gender: data.gender,
-      profile_photo: data.profile_photo
-    });
-    // const userPhoto = new ProfileImage({
-    //   key: data.imageKey,
-    //   user_id: user.user_id,
-    // });
+    }, undefined, true);
 
-    // await this.usersRepository.create(user, userPhoto);
     await this.usersRepository.create(user);
   }
 }

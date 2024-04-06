@@ -9,25 +9,24 @@ export class AuthenticationUseCase {
 
   async execute(data: IAuthenticationRequestDTO) {
     Object.entries(data).map(data => {
-      if (!data[1].replace(/\s+/g, '')) throw new Error('Fields are invalid.');
+      if (!data[1].replace(/\s+/g, '')) throw new Error('Os campos estão inválidos.');
     });
 
-    const { username, password } = data;
+    const { email, password } = data;
 
-    const user = await this.usersRepository.findToAuthenticate(username);
-    if (!user) throw new Error('Username wrong. Please try again.');
+    const user = await this.usersRepository.findToAuth(email);
+    if (!user) throw new Error('Email errado. Por favor, tente novamente.');
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect)
-      throw new Error('Password wrong. Please try again.');
+      throw new Error('Senha errada. Por favor, tente novamente.');
 
     const userData = {
-      id: user.user_id,
-      name: user.name,
-      username: user.username,
+      id: user.id,
+      email: user.email
     };
 
-    const token = jwt.sign(userData, JWT_SECRET, { expiresIn: '48h' });
+    const token = jwt.sign(userData, JWT_SECRET, JWT_EXPIRATION);
     return token;
   }
 }

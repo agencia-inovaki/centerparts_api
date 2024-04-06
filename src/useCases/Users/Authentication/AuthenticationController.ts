@@ -5,11 +5,11 @@ export class AuthenticationController {
   constructor(private authenticationUseCase: AuthenticationUseCase) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
-    const { username, password } = request.body;
+    const { email, password } = request.body;
 
     try {
       const userToken = await this.authenticationUseCase.execute({
-        username,
+        email,
         password,
       });
 
@@ -17,7 +17,7 @@ export class AuthenticationController {
     } catch (error: Error | any) {
       return response
         .status(422)
-        .json({ message: error.message || 'Unexpected error.' });
+        .json({ message: error.message || 'Erro inesperado.' });
     }
   }
 }

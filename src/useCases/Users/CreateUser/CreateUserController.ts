@@ -7,17 +7,13 @@ export class CreateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     // if (!request.file) throw new Error('Cannot find profile photo.');
 
-    const { name, username, email, password, gender, profile_photo } = request.body;
+    const { email, password } = request.body;
     // const imageKey = request.file.filename;
 
     try {
       await this.createUserUseCase.execute({
-        name,
-        username,
         email,
-        password,
-        gender,
-        profile_photo,
+        password
       });
 
       return response.status(201).send();
