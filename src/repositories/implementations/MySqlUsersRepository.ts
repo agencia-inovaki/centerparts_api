@@ -5,40 +5,61 @@ import { knex } from '../../database/connection'
 // OBS: use entities to create the data to send
 // instead of returning queries without formatting, if you don't know the right format
 export class MySqlUsersRepository implements IUsersRepository {
-  private readonly selectPublicUser: string[]
+  private readonly selectUser: string[]
+  private readonly selectUserToAuth: string[]
 
   constructor () {
-    this.selectPublicUser = [
-      'users.id'
+    this.selectUser = [
+      'users.id',
+      'users.email'
+    ]
+
+    this.selectUserToAuth = [
+      'users.id',
+      'users.email',
+      'users.password'
     ]
   }
 
   async findById (userId: string): Promise<User | null> {
-    const query = await knex
-      .select(this.selectPublicUser)
+    const user = await knex
+      .select(this.selectUser)
       .from('users')
-      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
-      .where('users.user_id', userId)
+      .where('users.id', userId)
       .first()
 
-    if (!query) return null
-    return query
+    if (!user) return null
+    return user
   }
 
   async findByEmail (email: string): Promise<User | null> {
-    const query = await knex
-      .select(this.selectPublicUser)
+    const user = await knex
+      .select(this.selectUser)
       .from('users')
-      .leftJoin('profile_image', 'users.user_id', 'profile_image.user_id')
       .where('users.email', email)
       .first()
 
-    if (!query) return null
-    return query
+    if (!user) return null
+    return user
+  }
+
+  async findToAuth (email: string): Promise<User | null> {
+    const user = await knex
+      .select(this.selectUserToAuth)
+      .from('users')
+      .where('users.email', email)
+      .first()
+
+    if (!user) return null
+    return user
   }
 
   async create (user: User): Promise<User> {
-    const userCreated = await knex.insert(user).into('users').returning(['id', 'email', 'password'])
+    const userCreated = await knex
+      .insert(user)
+      .into('users')
+      .returning(['id', 'email', 'password'])
+
     return userCreated[0]
   }
 }

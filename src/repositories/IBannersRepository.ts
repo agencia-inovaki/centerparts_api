@@ -1,10 +1,10 @@
-import { Banner, BannerImage } from '../entities/Banner'
+import { Banner } from '../entities/Banner'
 
 export interface IBannersRepository {
-  getAll: () => Promise<RecipeRequest[]>
-  getAllByAuthor: (authorId: string) => Promise<RecipeRequest[]>
-  getOne: (recipeId: string) => Promise<RecipeRequest | null>
+  getAll: () => Promise<Banner[]>
+  getOne: (bannerId: string) => Promise<Banner | null>
 
-  create: (recipe: RecipeRequest) => Promise<void>
-  delete: (recipeId: string) => Promise<void>
+  create: (banner: Banner) => Promise<Banner>
+  update: (banner: Banner) => Promise<Banner>
+  delete: (bannerId: string) => Promise<void>
 }

@@ -6,7 +6,7 @@ export function auth (request: Request, response: Response, next: NextFunction) 
   const authToken = request.headers.authorization
 
   if (!authToken) {
-    return response.status(401).json({ message: 'Token de autênticação não encontrado.' })
+    return response.status(401).json({ message: 'Token de autenticação não encontrado.' })
   }
 
   const token = authToken.split(' ')[1]
