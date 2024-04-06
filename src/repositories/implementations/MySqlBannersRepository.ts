@@ -1,141 +1,115 @@
 import { knex } from '../../database/connection'
-import { type RecipeRequest } from '../../entities/Recipe'
-import { type IRecipesRepository } from '../IRecipesRepository'
-import { formatRecipes } from '../../utils/formatRecipes'
+import { Banner, BannerImage, FullBanner } from '../../entities/Banner'
+import { IBannersRepository } from '../IBannersRepository'
 
 export class MySqlBannersRepository implements IBannersRepository {
-  private readonly selectRecipe: string[]
+  private readonly selectBanner: string[]
 
   constructor () {
-    this.selectRecipe = [
-      'recipes.recipe_id',
-      'recipes.title',
-      'recipes.servings',
-      'recipes.ready_in_minutes',
-      'recipes.author_id',
-      'recipe_ingredients.recipe_id',
-      'recipe_ingredients.name',
-      'recipe_ingredients.unit',
-      'recipe_ingredients.amount',
-      'recipe_instructions.recipe_id',
-      'recipe_instructions.step_number',
-      'recipe_instructions.step',
-      'recipe_image.recipe_id',
-      'recipe_image.path',
-      'recipe_image.key'
+    this.selectBanner = [
+      'banners.id',
+      'banners.title',
+      'banners.position',
+      'banners.redirect_url',
+      'banners.visible',
+      'banner_images.banner_id',
+      'banner_images.path',
+      'banner_images.key'
     ]
   }
 
-  async getAll (): Promise<any[]> {
-    const query = await knex
-      .select(this.selectRecipe)
-      .from('recipes')
-      .join(
-        'recipe_ingredients',
-        'recipes.recipe_id',
-        'recipe_ingredients.recipe_id'
-      )
-      .join(
-        'recipe_instructions',
-        'recipes.recipe_id',
-        'recipe_instructions.recipe_id'
-      )
-      .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
+  async getAll (): Promise<FullBanner[]> {
+    const bannersList = await knex
+      .select(this.selectBanner)
+      .from('banners')
+      .join('banner_images', 'banners.id', 'banner_images.banner_id')
       .options({ nestTables: true })
 
-    const response = formatRecipes(query)
-    return response
+    return bannersList as FullBanner[]
   }
 
-  async getAllByAuthor (authorId: string): Promise<any[]> {
-    const query = await knex
-      .select(this.selectRecipe)
-      .from('recipes')
-      .join(
-        'recipe_ingredients',
-        'recipes.recipe_id',
-        'recipe_ingredients.recipe_id'
-      )
-      .join(
-        'recipe_instructions',
-        'recipes.recipe_id',
-        'recipe_instructions.recipe_id'
-      )
-      .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
-      .where('reicpes.author_id', authorId)
+  async getOne (bannerId: string): Promise<FullBanner | null> {
+    const banner = await knex
+      .select(this.selectBanner)
+      .from('banners')
+      .join('banner_images', 'banners.id', 'banner_images.banner_id')
+      .where('banners.id', bannerId)
       .options({ nestTables: true })
+      .first()
 
-    const response = formatRecipes(query)
-    return response
+    if (!banner) return null
+    return banner
   }
 
-  async getOne (recipeId: string): Promise<any | null> {
-    const query = await knex
-      .select(this.selectRecipe)
-      .from('recipes')
-      .join(
-        'recipe_ingredients',
-        'recipes.recipe_id',
-        'recipe_ingredients.recipe_id'
-      )
-      .join(
-        'recipe_instructions',
-        'recipes.recipe_id',
-        'recipe_instructions.recipe_id'
-      )
-      .join('recipe_image', 'recipes.recipe_id', 'recipe_image.recipe_id')
-      .where('recipes.recipe_id', recipeId)
-      .options({ nestTables: true })
-
-    const response = formatRecipes(query)
-    return response
-  }
-
-  async create (recipe: RecipeRequest): Promise<void> {
-    await knex
+  async create (
+    banner: Banner, 
+    bannerImage: Omit<BannerImage, 'banner_id'>
+  ): Promise<FullBanner> {
+    const insertedBanner = await knex
       .insert({
-        recipe_id: recipe.recipe_id,
-        title: recipe.title,
-        servings: recipe.servings,
-        ready_in_minutes: recipe.ready_in_minutes,
-        author_id: recipe.author_id
+        id: banner.id,
+        title: banner.title,
+        position: banner.visible,
+        redirect_url: banner.visible,
+        visible: banner.visible
       })
-      .into('recipes')
+      .into('banners')
+      .returning('*')
+      .first()
 
-    await knex
+    const insertedImage = await knex
       .insert({
-        image_id: recipe.image.image_id,
-        key: recipe.image.key,
-        path: recipe.image.path,
-        recipe_id: recipe.image.recipe_id
+        id: bannerImage.id,
+        key: bannerImage.key,
+        path: bannerImage.path,
+        banner_id: banner.id
       })
-      .into('recipe_image')
+      .into('banner_images')
+      .returning('*')
+      .first()
 
-    recipe.ingredients.map(async ingredient => {
-      await knex
-        .insert({
-          ingredient_id: ingredient.ingredient_id,
-          name: ingredient.name,
-          unit: ingredient.unit,
-          amount: ingredient.amount,
-          recipe_id: ingredient.recipe_id
-        })
-        .into('recipe_ingredients')
-    })
+    return {...insertedBanner, imageData: insertedImage}
 
-    recipe.instructions.map(async instruction => {
-      await knex
-        .insert({
-          instruction_id: instruction.instruction_id,
-          step_number: instruction.step_number,
-          step: instruction.step,
-          recipe_id: instruction.recipe_id
-        })
-        .into('recipe_instructions')
-    })
   }
 
-  async delete (recipeId: string): Promise<void> {
-    await knex.table('recipes').where({ recipe_id: recipeId }).delete()
+  async update(
+    bannerId: string, 
+    data: Partial<FullBanner>
+  ): Promise<FullBanner> {
+    const updatedBanner = await knex
+      .table('banners')
+      .where({ id: bannerId })
+      .update({ 
+        title: data.title,
+        position: data.position,
+        redirect_url: data.redirect_url,
+        visible: data.visible
+      })
+      .returning('*')
+      .first()
+
+    let insImage: Record<string, any> | null = null
+
+    if (data.imageData) {
+      await knex.table('banner_images').where({ banner_id: bannerId }).delete();
+      const insertedImage = await knex
+        .insert({
+          id: data.imageData.id,
+          key: data.imageData.key,
+          path: data.imageData.path,
+          banner_id: bannerId
+        })
+        .into('banner_images')
+        .returning('*')
+        .first()
+
+      insImage = insertedImage
+    }
+
+    return {...updatedBanner, imageData: insImage ?? updatedBanner.imageData}
+  }
+
+  async delete (bannerId: string): Promise<void> {
+    await knex.table('banners').where({ id: bannerId }).delete()
   }
 }

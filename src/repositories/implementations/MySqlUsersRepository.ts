@@ -60,6 +60,6 @@ export class MySqlUsersRepository implements IUsersRepository {
       .into('users')
       .returning(['id', 'email', 'password'])
 
-    return userCreated[0]
+    return userCreated[0] as User
   }
 }

@@ -1,10 +1,13 @@
-import { Banner } from '../entities/Banner'
+import { Banner, BannerImage, FullBanner } from '../entities/Banner'
 
 export interface IBannersRepository {
-  getAll: () => Promise<Banner[]>
-  getOne: (bannerId: string) => Promise<Banner | null>
+  getAll: () => Promise<FullBanner[]>
+  getOne: (bannerId: string) => Promise<FullBanner | null>
 
-  create: (banner: Banner) => Promise<Banner>
-  update: (banner: Banner) => Promise<Banner>
+  create: (
+    banner: Banner,  
+    bannerImage: Omit<BannerImage, 'banner_id'>
+  ) => Promise<FullBanner>
+  update: ( bannerId: string, data: Partial<FullBanner>) => Promise<FullBanner>
   delete: (bannerId: string) => Promise<void>
 }

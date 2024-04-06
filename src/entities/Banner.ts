@@ -27,3 +27,16 @@ export class BannerImage {
     this.path = `${process.env.APP_URL}/uploads/${this.key}`
   }
 }
+
+export class FullBanner {
+  public readonly id!: string
+  public title!: string
+  public position!: number
+  public redirect_url!: string
+  public visible!: boolean
+  public imageData!: BannerImage
+
+  constructor (props: Banner) {
+    Object.assign(this, props)
+  }
+}
