@@ -1,0 +1,35 @@
+formato de requisições
+
+post /authenticate
+  json
+    email string
+    senha string
+
+post /user
+  json
+    email string
+    senha string
+
+get /user/:email
+
+post /banner
+  multipart form
+    title string
+    position number
+    redirectUrl string
+    visible 0 or 1
+    banner-photo file
+
+delete /banner/:id
+
+put /banner
+  json
+    id string
+    title string
+    position number
+    redirectUrl string
+    visible 0 or 1
+
+get /banners
+
+get /banner/:id
