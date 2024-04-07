@@ -6,9 +6,10 @@
   "type": "commonjs",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
-    "prestart": "tsc",
-    "start": "node ./dist/src/server.js",
-    "migrate": "npx knex --knexfile dist/knexfile.js migrate:latest"
+    "prestart": "yarn build && yarn migrate",
+    "build": "tsc",
+    "migrate": "npx knex --knexfile dist/knexfile.js migrate:latest",
+    "start": "node ./dist/src/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
