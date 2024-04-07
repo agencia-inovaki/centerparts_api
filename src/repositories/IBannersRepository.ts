@@ -8,6 +8,6 @@ export interface IBannersRepository {
     banner: Banner,
     bannerImage: BannerImage
   ) => Promise<FullBanner>
-  update: (bannerId: string, data: Partial<FullBanner>) => Promise<FullBanner>
+  update: (bannerId: string, data: Partial<FullBanner>) => Promise<void>
   delete: (bannerId: string) => Promise<void>
 }

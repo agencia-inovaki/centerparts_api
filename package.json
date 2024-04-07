@@ -6,8 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
-    "build": "tsc",
-    "start": "node ./dist/src/server.js"
+    "prestart": "tsc",
+    "start": "node ./dist/src/server.js",
+    "migrate": "npx knex --knexfile dist/knexfile.js migrate:latest"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

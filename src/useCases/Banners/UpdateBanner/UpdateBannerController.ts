@@ -11,7 +11,7 @@ export class UpdateBannerController {
     const imageKey = request.file.filename
 
     try {
-      const banner = await this.createBannerUseCase.execute({
+      await this.createBannerUseCase.execute({
         id,
         title,
         position,
@@ -20,7 +20,7 @@ export class UpdateBannerController {
         imageData: { key: imageKey }
       })
 
-      return response.status(200).json(banner)
+      return response.status(200).send()
     } catch (error: Error | any) {
       return response
         .status(400)

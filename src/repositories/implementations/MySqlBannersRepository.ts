@@ -68,14 +68,16 @@ export class MySqlBannersRepository implements IBannersRepository {
       .returning('*')
       .first()
 
+    if (!insertedBanner || !insertedImage) return {} as FullBanner
+
     return { ...insertedBanner, imageData: insertedImage }
   }
 
   async update (
     bannerId: string,
     data: Partial<FullBanner>
-  ): Promise<FullBanner> {
-    const updatedBanner = await knex
+  ): Promise<void> {
+    await knex
       .table('banners')
       .where({ id: bannerId })
       .update({
@@ -87,11 +89,9 @@ export class MySqlBannersRepository implements IBannersRepository {
       .returning('*')
       .first()
 
-    let insImage: Record<string, any> | null = null
-
     if (data.imageData) {
       await knex.table('banner_images').where({ banner_id: bannerId }).delete()
-      const insertedImage = await knex
+      await knex
         .insert({
           id: data.imageData.id,
           key: data.imageData.key,
@@ -101,11 +101,7 @@ export class MySqlBannersRepository implements IBannersRepository {
         .into('banner_images')
         .returning('*')
         .first()
-
-      insImage = insertedImage
     }
-
-    return { ...updatedBanner, imageData: insImage ?? updatedBanner.imageData }
   }
 
   async delete (bannerId: string): Promise<void> {

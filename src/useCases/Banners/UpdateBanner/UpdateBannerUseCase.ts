@@ -39,7 +39,6 @@ export class UpdateBannerUseCase {
       imageData: bannerImage
     })
 
-    const updatedBanner = await this.bannersRepository.update(banner.id, fullBanner)
-    return updatedBanner
+    await this.bannersRepository.update(banner.id, fullBanner)
   }
 }

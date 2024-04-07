@@ -18,7 +18,6 @@ export function auth (request: Request, response: Response, next: NextFunction) 
         .json({ message: error.message || 'Token inválido.' })
     }
 
-    // @ts-expect-error obs
     request.customData = {
       token,
       data: decoded
