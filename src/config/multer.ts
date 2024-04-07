@@ -14,7 +14,7 @@ export const options: Options = {
     }
   }),
   limits: {
-    fileSize: 2 * 1024 * 1024
+    // fileSize: 2 * 1024 * 1024
   },
   fileFilter: (request, file, cb) => {
     const allowedMimes = [
