@@ -1,5 +1,4 @@
-import { friendshipRouter } from './friendships';
-import { recipeRouter } from './recipes';
-import { userRouter } from './users';
+import { bannerRouter } from './banners'
+import { userRouter } from './users'
 
-export { userRouter, recipeRouter, friendshipRouter };
+export { userRouter, bannerRouter }

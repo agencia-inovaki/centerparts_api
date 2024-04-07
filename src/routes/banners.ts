@@ -2,32 +2,32 @@ import express from 'express'
 import multer from 'multer'
 import { options } from '../config/multer'
 import { auth } from '../middleware/auth'
-import { createRecipeController } from '../useCases/Banners/CreateRecipe'
-import { deleteRecipeController } from '../useCases/Banners/DeleteRecipe'
-import { getAllRecipesController } from '../useCases/Banners/GetAllRecipes'
-import { getAllUsersRecipesController } from '../useCases/Banners/GetAllUsersRecipes'
-import { getOneRecipeController } from '../useCases/Banners/GetOneRecipe'
+import { getOneBannerController } from '../useCases/Banners/GetOneBanner'
+import { getAllBannersController } from '../useCases/Banners/GetAllBanners'
+import { createBannerController } from '../useCases/Banners/CreateBanner'
+import { deleteBannerController } from '../useCases/Banners/DeleteBanner'
+import { updateBannerController } from '../useCases/Banners/UpdateBanner'
 
-export const recipeRouter = express.Router()
+export const bannerRouter = express.Router()
 
-recipeRouter
+bannerRouter
   .post(
-    '/recipe',
+    '/banner',
     auth,
-    multer(options).single('recipe-photo'),
-    (request, response) => {
-      createRecipeController.handle(request, response)
+    multer(options).single('banner-photo'),
+    async (request, response) => {
+      await createBannerController.handle(request, response)
     }
   )
-  .delete('/recipe/:id', auth, (request, response) => {
-    deleteRecipeController.handle(request, response)
+  .delete('/banner/:id', auth, async (request, response) => {
+    await deleteBannerController.handle(request, response)
   })
-  .get('/recipes', auth, (request, response) => {
-    getAllRecipesController.handle(request, response)
+  .put('/banner', auth, async (request, response) => {
+    await updateBannerController.handle(request, response)
   })
-  .get('/recipes/:userId', auth, (request, response) => {
-    getAllUsersRecipesController.handle(request, response)
+  .get('/banners', auth, async (request, response) => {
+    await getAllBannersController.handle(request, response)
   })
-  .get('/recipe/:id', auth, (request, response) => {
-    getOneRecipeController.handle(request, response)
+  .get('/banner/:id', auth, async (request, response) => {
+    await getOneBannerController.handle(request, response)
   })

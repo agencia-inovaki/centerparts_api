@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import dotenv from 'dotenv'
-import { userRouter, recipeRouter, friendshipRouter } from './routes'
+import { userRouter, bannerRouter } from './routes'
 
 dotenv.config()
 
@@ -15,6 +15,6 @@ app.use(
   '/uploads',
   express.static(path.join(__dirname, '..', 'tmp', 'uploads'))
 )
-app.use(userRouter, recipeRouter, friendshipRouter)
+app.use(userRouter, bannerRouter)
 
 app.listen(process.env.PORT || 7070)
