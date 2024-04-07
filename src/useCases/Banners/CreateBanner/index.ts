@@ -1,15 +1,12 @@
-import { MySqlRecipesRepository } from '../../../repositories/implementations/MySqlRecipesRepository';
-import { MySqlUsersRepository } from '../../../repositories/implementations/MySqlUsersRepository';
-import { CreateRecipeController } from './CreateRecipeController';
-import { CreateRecipeUseCase } from './CreateRecipeUseCase';
+import { MySqlBannersRepository } from '../../../repositories/implementations/MySqlBannersRepository'
+import { CreateBannerController } from './CreateBannerController'
+import { CreateBannerUseCase } from './CreateBannerUseCase'
 
-const mysqlRecipesRepository = new MySqlRecipesRepository();
-const mysqlUsersRepository = new MySqlUsersRepository();
+const mysqlBannersRepository = new MySqlBannersRepository()
 
-const createRecipeUseCase = new CreateRecipeUseCase(
-  mysqlRecipesRepository,
-  mysqlUsersRepository
-);
-const createRecipeController = new CreateRecipeController(createRecipeUseCase);
+const createRecipeUseCase = new CreateBannerUseCase(
+  mysqlBannersRepository
+)
+const createBannerController = new CreateBannerController(createRecipeUseCase)
 
-export { createRecipeController };
+export { createBannerController }

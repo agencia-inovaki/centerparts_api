@@ -43,7 +43,7 @@ export class MySqlBannersRepository implements IBannersRepository {
 
   async create (
     banner: Banner,
-    bannerImage: Omit<BannerImage, 'banner_id'>
+    bannerImage: BannerImage
   ): Promise<FullBanner> {
     const insertedBanner = await knex
       .insert({
@@ -62,7 +62,7 @@ export class MySqlBannersRepository implements IBannersRepository {
         id: bannerImage.id,
         key: bannerImage.key,
         path: bannerImage.path,
-        banner_id: banner.id
+        banner_id: bannerImage.banner_id
       })
       .into('banner_images')
       .returning('*')

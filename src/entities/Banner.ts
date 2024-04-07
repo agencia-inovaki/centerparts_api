@@ -20,7 +20,10 @@ export class BannerImage {
   public path: string
   public banner_id!: string
 
-  constructor (props: Omit<BannerImage, 'id' | 'path'>, id?: string) {
+  constructor (
+    props: Omit<BannerImage, 'id' | 'path'>,
+    id?: string
+  ) {
     Object.assign(this, props)
 
     id ? this.id = id : this.id = uuid()

@@ -1,3 +1,3 @@
-export interface IGetOneRecipeRequest {
-  recipeId: string;
+export interface IGetOneBannerRequest {
+  bannerId: string
 }

@@ -1,10 +1,10 @@
-import { MySqlRecipesRepository } from '../../../repositories/implementations/MySqlRecipesRepository';
-import { DeleteRecipeController } from './DeleteRecipeController';
-import { DeleteRecipeUseCase } from './DeleteRecipeUseCase';
+import { MySqlBannersRepository } from '../../../repositories/implementations/MySqlBannersRepository'
+import { DeleteBannerController } from './DeleteBannerController'
+import { DeleteBannerUseCase } from './DeleteBannerUseCase'
 
-const mysqlRecipesRepository = new MySqlRecipesRepository();
+const mysqlBannersRepository = new MySqlBannersRepository()
 
-const deleteRecipeUseCase = new DeleteRecipeUseCase(mysqlRecipesRepository);
-const deleteRecipeController = new DeleteRecipeController(deleteRecipeUseCase);
+const deleteBannerUseCase = new DeleteBannerUseCase(mysqlBannersRepository)
+const deleteBannerController = new DeleteBannerController(deleteBannerUseCase)
 
-export { deleteRecipeController };
+export { deleteBannerController }

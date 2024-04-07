@@ -1,16 +1,16 @@
 import { type Response, type Request } from 'express'
-import { type GetOneBannerUseCase } from './GetOneRecipeUseCase'
+import { type DeleteBannerUseCase } from './DeleteBannerUseCase'
 
-export class GetOneBannerController {
-  constructor (private readonly getOneBannerUseCase: GetOneBannerUseCase) {}
+export class DeleteBannerController {
+  constructor (private readonly deleteBannerUseCase: DeleteBannerUseCase) {}
 
   async handle (request: Request, response: Response): Promise<Response> {
     const bannerId = request.params.id
 
     try {
-      const banner = await this.getOneBannerUseCase.execute({ bannerId })
+      await this.deleteBannerUseCase.execute({ bannerId })
 
-      return response.status(200).json(banner)
+      return response.status(200).send()
     } catch (error: Error | any) {
       return response
         .status(400)

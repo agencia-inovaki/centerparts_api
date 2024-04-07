@@ -1,10 +1,10 @@
-import { MySqlRecipesRepository } from '../../../repositories/implementations/MySqlRecipesRepository';
-import { GetOneRecipeController } from './GetOneRecipeController';
-import { GetOneRecipeUseCase } from './GetOneRecipeUseCase';
+import { MySqlBannersRepository } from '../../../repositories/implementations/MySqlBannersRepository'
+import { GetOneBannerController } from './GetOneRecipeController'
+import { GetOneBannerUseCase } from './GetOneRecipeUseCase'
 
-const mysqlRecipesRepository = new MySqlRecipesRepository();
+const mysqlBannersRepository = new MySqlBannersRepository()
 
-const getOneRecipeUseCase = new GetOneRecipeUseCase(mysqlRecipesRepository);
-const getOneRecipeController = new GetOneRecipeController(getOneRecipeUseCase);
+const getOneBannerUseCase = new GetOneBannerUseCase(mysqlBannersRepository)
+const getOneBannerController = new GetOneBannerController(getOneBannerUseCase)
 
-export { getOneRecipeController };
+export { getOneBannerController }
