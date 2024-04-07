@@ -33,3 +33,5 @@ put /banner
 get /banners
 
 get /banner/:id
+
+rodar com yarn start, sempre buildando
