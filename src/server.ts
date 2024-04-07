@@ -13,7 +13,7 @@ app.use(express.json())
 
 app.use(
   '/uploads',
-  express.static(path.join(__dirname, '..', 'tmp', 'uploads'))
+  express.static(path.join(__dirname, '..', '..', 'tmp', 'uploads'))
 )
 app.use(userRouter, bannerRouter)
 
