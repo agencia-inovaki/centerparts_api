@@ -17,4 +17,4 @@ app.use(
 )
 app.use(userRouter, bannerRouter)
 
-app.listen(process.env.PORT || 7070)
+app.listen(process.env.PORT || 7070, () => { console.log('🚀 server is running') })
