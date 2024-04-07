@@ -5,22 +5,19 @@ export class UpdateBannerController {
   constructor (private readonly createBannerUseCase: UpdateBannerUseCase) {}
 
   async handle (request: Request, response: Response): Promise<Response> {
-    if (!request.file) throw new Error('Imagem do banner não recebida.')
-
+    console.log('body', request.body)
     const { id, title, position, redirectUrl, visible } = request.body
-    const imageKey = request.file.filename
 
     try {
-      await this.createBannerUseCase.execute({
+      const banner = await this.createBannerUseCase.execute({
         id,
         title,
         position,
         redirect_url: redirectUrl,
-        visible,
-        imageData: { key: imageKey }
+        visible
       })
 
-      return response.status(200).send()
+      return response.status(200).json(banner)
     } catch (error: Error | any) {
       return response
         .status(400)

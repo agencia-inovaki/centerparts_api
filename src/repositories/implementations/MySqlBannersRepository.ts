@@ -44,18 +44,17 @@ export class MySqlBannersRepository implements IBannersRepository {
   async create (
     banner: Banner,
     bannerImage: BannerImage
-  ): Promise<FullBanner> {
+  ): Promise<any> {
     const insertedBanner = await knex
       .insert({
         id: banner.id,
         title: banner.title,
-        position: banner.visible,
-        redirect_url: banner.visible,
+        position: banner.position,
+        redirect_url: banner.redirect_url,
         visible: banner.visible
       })
       .into('banners')
       .returning('*')
-      .first()
 
     const insertedImage = await knex
       .insert({
@@ -66,18 +65,16 @@ export class MySqlBannersRepository implements IBannersRepository {
       })
       .into('banner_images')
       .returning('*')
-      .first()
 
-    if (!insertedBanner || !insertedImage) return {} as FullBanner
-
-    return { ...insertedBanner, imageData: insertedImage }
+    return { ...insertedBanner[0], imageData: insertedImage[0] }
   }
 
   async update (
     bannerId: string,
-    data: Partial<FullBanner>
-  ): Promise<void> {
-    await knex
+    data: Banner
+  ): Promise<any> {
+    console.log(bannerId, data)
+    const updatedBanner = await knex
       .table('banners')
       .where({ id: bannerId })
       .update({
@@ -87,21 +84,8 @@ export class MySqlBannersRepository implements IBannersRepository {
         visible: data.visible
       })
       .returning('*')
-      .first()
 
-    if (data.imageData) {
-      await knex.table('banner_images').where({ banner_id: bannerId }).delete()
-      await knex
-        .insert({
-          id: data.imageData.id,
-          key: data.imageData.key,
-          path: data.imageData.path,
-          banner_id: bannerId
-        })
-        .into('banner_images')
-        .returning('*')
-        .first()
-    }
+    return { ...updatedBanner[0] }
   }
 
   async delete (bannerId: string): Promise<void> {

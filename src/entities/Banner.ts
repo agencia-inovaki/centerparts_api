@@ -14,6 +14,18 @@ export class Banner {
   }
 }
 
+export class UpdateBanner {
+  public readonly id!: string
+  public title?: string
+  public position?: number
+  public redirect_url?: string
+  public visible?: boolean
+
+  constructor (props: UpdateBanner) {
+    Object.assign(this, props)
+  }
+}
+
 export class BannerImage {
   public readonly id: string
   public key!: string
@@ -40,6 +52,19 @@ export class FullBanner {
   public imageData!: BannerImage
 
   constructor (props: FullBanner) {
+    Object.assign(this, props)
+  }
+}
+
+export class UpdateFullBanner {
+  public readonly id!: string
+  public title?: string
+  public position?: number
+  public redirect_url?: string
+  public visible?: boolean
+  public imageData?: BannerImage
+
+  constructor (props: UpdateFullBanner) {
     Object.assign(this, props)
   }
 }

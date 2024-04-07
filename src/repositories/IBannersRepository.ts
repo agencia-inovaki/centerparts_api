@@ -7,7 +7,7 @@ export interface IBannersRepository {
   create: (
     banner: Banner,
     bannerImage: BannerImage
-  ) => Promise<FullBanner>
-  update: (bannerId: string, data: Partial<FullBanner>) => Promise<void>
+  ) => Promise<any>
+  update: (bannerId: string, data: Banner) => Promise<any>
   delete: (bannerId: string) => Promise<void>
 }
