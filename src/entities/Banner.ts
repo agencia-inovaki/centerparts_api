@@ -39,7 +39,7 @@ export class FullBanner {
   public visible!: boolean
   public imageData!: BannerImage
 
-  constructor (props: Banner) {
+  constructor (props: FullBanner) {
     Object.assign(this, props)
   }
 }
