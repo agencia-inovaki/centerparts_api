@@ -13,9 +13,6 @@ export const options: Options = {
       cb(null, filename)
     }
   }),
-  limits: {
-    // fileSize: 2 * 1024 * 1024
-  },
   fileFilter: (request, file, cb) => {
     const allowedMimes = [
       'image/jpeg',
