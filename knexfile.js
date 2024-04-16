@@ -9,8 +9,8 @@ export default {
       host: '127.0.0.1',
       port: 5432,
       user: 'postgres',
-      password: '123',
-      database: 'teste'
+      password: 'postgres',
+      database: 'centerparts'
     },
     migrations: {
       tableName: 'knex_migrations',
