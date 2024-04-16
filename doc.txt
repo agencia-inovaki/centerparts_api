@@ -5,13 +5,6 @@ post /authenticate
     email string
     senha string
 
-post /user
-  json
-    email string
-    senha string
-
-get /user/:email
-
 post /banner
   multipart form
     title string
