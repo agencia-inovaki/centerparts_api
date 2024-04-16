@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
-    "prestart": "yarn build && yarn migrate",
+    "prestart": "npm run build && npm run migrate",
     "build": "tsc",
     "migrate": "npx knex --knexfile dist/knexfile.js migrate:latest",
     "start": "node ./dist/src/server.js"
@@ -23,7 +23,8 @@
     "mysql": "^2.18.1",
     "pg": "^8.11.3",
     "tsc": "^2.0.4",
-    "uuidv4": "^6.2.12"
+    "uuidv4": "^6.2.12",
+    "typescript": "*"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -39,7 +40,6 @@
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
     "jest": "^27.2.4",
-    "ts-node-dev": "^1.1.8",
-    "typescript": "*"
+    "ts-node-dev": "^1.1.8"
   }
 }
