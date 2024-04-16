@@ -16,7 +16,7 @@ export class CreateUserController {
         password
       })
 
-      return response.status(201).json({ user })
+      return response.status(201).json({ email: user.email })
     } catch (error: Error | any) {
       return response.status(400).json({
         message: error.message || 'Unexpected error.'
