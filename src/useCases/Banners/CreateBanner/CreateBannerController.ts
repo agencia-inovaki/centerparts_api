@@ -7,7 +7,14 @@ export class CreateBannerController {
   async handle (request: Request, response: Response): Promise<Response> {
     if (!request.file) throw new Error('Imagem do banner não recebida.')
 
-    const { title, position, redirectUrl, visible } = request.body
+    const {
+      title,
+      position,
+      redirectUrl,
+      visible,
+      category,
+      supplierId
+    } = request.body
     const imageKey = request.file.filename
 
     try {
@@ -16,6 +23,8 @@ export class CreateBannerController {
         position,
         redirect_url: redirectUrl,
         visible,
+        category,
+        supplier_id: supplierId,
         imageData: { key: imageKey }
       })
 

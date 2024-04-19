@@ -10,6 +10,6 @@ export class DeleteBannerUseCase {
     const banner = await this.bannersRepository.getOne(data.bannerId)
     if (!banner) throw new Error('Banner não encontrado.')
 
-    await this.bannersRepository.delete(data.bannerId)
+    await this.bannersRepository.delete(banner)
   }
 }

@@ -25,7 +25,7 @@ bannerRouter
   .put('/banner', auth, async (request, response) => {
     await updateBannerController.handle(request, response)
   })
-  .get('/banners', auth, async (request, response) => {
+  .get('/banners/:category', auth, async (request, response) => {
     await getAllBannersController.handle(request, response)
   })
   .get('/banner/:id', auth, async (request, response) => {

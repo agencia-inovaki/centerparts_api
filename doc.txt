@@ -28,3 +28,11 @@ get /banners
 get /banner/:id
 
 rodar com yarn start, sempre buildando
+
+- categorias
+banner principal
+logomarca home
+banner menu lateral
+ordenação de fornecedores
+banner principal do fornecedor
+produtos em destaques do fornecedor

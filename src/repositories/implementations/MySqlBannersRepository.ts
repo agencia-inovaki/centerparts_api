@@ -1,5 +1,5 @@
 import { knex } from '../../database/connection'
-import { type Banner, type BannerImage, type FullBanner } from '../../entities/Banner'
+import { BannerCategory, type UpdateBanner, type Banner, type BannerImage, type FullBanner } from '../../entities/Banner'
 import { type IBannersRepository } from '../IBannersRepository'
 
 export class MySqlBannersRepository implements IBannersRepository {
@@ -12,16 +12,19 @@ export class MySqlBannersRepository implements IBannersRepository {
       'banners.position',
       'banners.redirect_url',
       'banners.visible',
+      'banners.category',
+      'banners.supplier_id',
       'banner_images.banner_id',
       'banner_images.path',
       'banner_images.key'
     ]
   }
 
-  async getAll (): Promise<FullBanner[]> {
+  async getAll (category: BannerCategory): Promise<FullBanner[]> {
     const bannersList = await knex
       .select(this.selectBanner)
       .from('banners')
+      .where('banners.category', category)
       .join('banner_images', 'banners.id', 'banner_images.banner_id')
       .options({ nestTables: true })
 
@@ -51,7 +54,9 @@ export class MySqlBannersRepository implements IBannersRepository {
         title: banner.title,
         position: banner.position,
         redirect_url: banner.redirect_url,
-        visible: banner.visible
+        visible: banner.visible,
+        category: banner.category,
+        supplier_id: banner.supplier_id
       })
       .into('banners')
       .returning('*')
@@ -71,9 +76,8 @@ export class MySqlBannersRepository implements IBannersRepository {
 
   async update (
     bannerId: string,
-    data: Banner
+    data: UpdateBanner
   ): Promise<any> {
-    console.log(bannerId, data)
     const updatedBanner = await knex
       .table('banners')
       .where({ id: bannerId })
@@ -88,7 +92,11 @@ export class MySqlBannersRepository implements IBannersRepository {
     return { ...updatedBanner[0] }
   }
 
-  async delete (bannerId: string): Promise<void> {
-    await knex.table('banners').where({ id: bannerId }).delete()
+  async delete (banner: FullBanner): Promise<void> {
+    await knex.table('banners').where({ id: banner.id }).delete()
+
+    if (banner.category === BannerCategory.ORDENACAO_DE_FORNECEDORES) {
+      await knex.table('banners').where({ supplier_id: banner.id }).delete()
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Banner, BannerImage } from '../../../entities/Banner'
+import { Banner, BannerCategory, BannerImage } from '../../../entities/Banner'
 import { type IBannersRepository } from '../../../repositories/IBannersRepository'
 import { type ICreateBannerRequestDTO } from './CreateBannerDTO'
 
@@ -18,12 +18,22 @@ export class CreateBannerUseCase {
       if (!data[1].replace(/\s+/g, '')) throw new Error('Imagem é inválida.')
     })
 
+    if (!Object.values(BannerCategory).includes(data.category)) throw new Error('Categoria inválida.')
+
     const banner = new Banner({
       title: data.title,
       position: data.position,
       redirect_url: data.redirect_url,
-      visible: data.visible
+      visible: data.visible,
+      category: data.category,
+      supplier_id: null
     })
+
+    if (banner.category === BannerCategory.BANNER_PRINCIPAL_DO_FORNECEDOR) {
+      if (!data.supplier_id) throw new Error('Banner principal do fornecedor precisa da id do fornecedor.')
+
+      banner.supplier_id = data.supplier_id
+    }
 
     const bannerImage = new BannerImage({
       key: data.imageData.key,

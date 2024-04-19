@@ -1,4 +1,4 @@
-import { Banner } from '../../../entities/Banner'
+import { UpdateBanner } from '../../../entities/Banner'
 import { type IBannersRepository } from '../../../repositories/IBannersRepository'
 import { type IUpdateBannerRequestDTO } from './UpdateBannerDTO'
 
@@ -14,12 +14,13 @@ export class UpdateBannerUseCase {
       if (typeof data[1] === 'number' && isNaN(data[1])) { throw new Error('Os campos estão inválidos.') }
     })
 
-    const banner = new Banner({
+    const banner = new UpdateBanner({
+      id: data.id,
       title: data.title,
       position: data.position,
       redirect_url: data.redirect_url,
       visible: data.visible
-    }, data.id)
+    })
 
     const updated = await this.bannersRepository.update(banner.id, banner)
     return updated
