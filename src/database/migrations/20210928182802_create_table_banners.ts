@@ -12,7 +12,7 @@ export async function up (knex: Knex): Promise<void> {
       table.boolean('visible').notNullable()
       table.string('category').notNullable()
       table.string('supplier_id').nullable()
-      table.string('created_at').defaultTo(new Date().toISOString())
+      table.string('created_at').defaultTo(knex.fn.now())
     })
   })
 }

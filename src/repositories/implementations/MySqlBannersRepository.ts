@@ -14,6 +14,7 @@ export class MySqlBannersRepository implements IBannersRepository {
       'banners.visible',
       'banners.category',
       'banners.supplier_id',
+      'banners.created_at',
       'banner_images.banner_id',
       'banner_images.path',
       'banner_images.key'
@@ -56,7 +57,8 @@ export class MySqlBannersRepository implements IBannersRepository {
         redirect_url: banner.redirect_url,
         visible: banner.visible,
         category: banner.category,
-        supplier_id: banner.supplier_id
+        supplier_id: banner.supplier_id,
+        created_at: new Date().toISOString()
       })
       .into('banners')
       .returning('*')
