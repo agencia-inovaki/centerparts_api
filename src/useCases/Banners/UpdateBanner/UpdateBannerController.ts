@@ -5,7 +5,6 @@ export class UpdateBannerController {
   constructor (private readonly createBannerUseCase: UpdateBannerUseCase) {}
 
   async handle (request: Request, response: Response): Promise<Response> {
-    console.log('body', request.body)
     const { id, title, position, redirectUrl, visible } = request.body
 
     try {

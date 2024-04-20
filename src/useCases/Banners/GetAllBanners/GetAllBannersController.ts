@@ -6,8 +6,10 @@ export class GetAllBannersController {
 
   async handle (request: Request, response: Response): Promise<Response> {
     const category = request.params.category
+    const supplierId = request.query.supplierId
+
     try {
-      const banners = await this.getAllBannersUseCase.execute(category)
+      const banners = await this.getAllBannersUseCase.execute(category, supplierId)
 
       return response.status(200).json(banners)
     } catch (error: Error | any) {

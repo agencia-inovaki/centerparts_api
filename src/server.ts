@@ -3,6 +3,7 @@ import cors from 'cors'
 import path from 'path'
 import dotenv from 'dotenv'
 import { userRouter, bannerRouter } from './routes'
+import { productRouter } from './routes/products'
 
 dotenv.config()
 
@@ -16,6 +17,6 @@ app.use(
   '/uploads',
   express.static(path.join(__dirname, '..', '..', 'tmp', 'uploads'))
 )
-app.use(userRouter, bannerRouter)
+app.use(userRouter, bannerRouter, productRouter)
 
 app.listen(process.env.PORT || 3000, () => { console.log('🚀 server is running') })

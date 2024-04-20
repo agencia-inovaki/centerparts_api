@@ -1,7 +1,7 @@
 import { type UpdateBanner, type Banner, type BannerImage, type FullBanner, type BannerCategory } from '../entities/Banner'
 
 export interface IBannersRepository {
-  getAll: (category: BannerCategory) => Promise<FullBanner[]>
+  getAll: (category: BannerCategory, supplierId?: string) => Promise<FullBanner[]>
   getOne: (bannerId: string) => Promise<FullBanner | null>
 
   create: (

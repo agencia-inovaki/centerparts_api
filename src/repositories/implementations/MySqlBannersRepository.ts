@@ -21,14 +21,18 @@ export class MySqlBannersRepository implements IBannersRepository {
     ]
   }
 
-  async getAll (category: BannerCategory): Promise<FullBanner[]> {
-    const bannersList = await knex
+  async getAll (category: BannerCategory, supplierId?: string): Promise<FullBanner[]> {
+    let bannersQuery = knex
       .select(this.selectBanner)
       .from('banners')
       .where('banners.category', category)
       .join('banner_images', 'banners.id', 'banner_images.banner_id')
-      .options({ nestTables: true })
 
+    if (supplierId) {
+      bannersQuery = bannersQuery.andWhere('banners.supplier_id', supplierId)
+    }
+
+    const bannersList = await bannersQuery.options({ nestTables: true })
     return bannersList as FullBanner[]
   }
 
