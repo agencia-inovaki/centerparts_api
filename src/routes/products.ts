@@ -18,9 +18,9 @@ productRouter
   .delete('/product/:id', auth, async (request, response) => {
     await deleteProductController.handle(request, response)
   })
-  .get('/products/:bannerId', auth, async (request, response) => {
+  .get('/products/:bannerId', async (request, response) => {
     await getAllProductsController.handle(request, response)
   })
-  .get('/product/:id', auth, async (request, response) => {
+  .get('/product/:id', async (request, response) => {
     await getOneProductController.handle(request, response)
   })
