@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile-nodejs
     container_name: nodejs-container
     ports:
-      - "3000:3000"
+      - "9000:3000"
     volumes:
       - ./tmp/uploads:/app/tmp/uploads
     depends_on:
