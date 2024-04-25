@@ -23,8 +23,8 @@
     "mysql": "^2.18.1",
     "pg": "^8.11.3",
     "tsc": "^2.0.4",
-    "uuidv4": "^6.2.12",
-    "typescript": "*"
+    "typescript": "*",
+    "uuidv4": "^6.2.12"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

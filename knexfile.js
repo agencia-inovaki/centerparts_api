@@ -4,12 +4,12 @@ dotenv.config()
 
 export default {
   development: {
-    client: 'pg',
+    client: 'mysql',
     connection: {
-      host: 'postgres',
-      port: 5432,
-      user: 'postgres',
-      password: 'postgres',
+      host: 'mysql',
+      port: 3306,
+      user: 'centerparts-user',
+      password: 'regnoS@ndR@Msuad02',
       database: 'centerparts'
     },
     migrations: {
