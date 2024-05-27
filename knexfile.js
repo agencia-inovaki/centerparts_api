@@ -8,8 +8,8 @@ export default {
     connection: {
       host: 'postgres',
       port: 5432,
-      user: 'postgres',
-      password: 'postgres',
+      user: 'postgresCenterpart',
+      password: 'vCi2LgsNQ9XFzngqh8u',
       database: 'centerparts'
     },
     migrations: {
