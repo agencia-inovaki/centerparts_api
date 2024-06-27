@@ -15,6 +15,6 @@ export class GetAllBannersUseCase {
     }
 
     banners = await this.bannersRepository.getAll(category as BannerCategory)
-    return banners
+    return banners.sort((a, b) => a.position - b.position)
   }
 }

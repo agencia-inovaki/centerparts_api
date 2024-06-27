@@ -20,6 +20,10 @@ export class CreateBannerUseCase {
 
     if (!Object.values(BannerCategory).includes(data.category)) throw new Error('Categoria inválida.')
 
+    const allBanners = await this.bannersRepository.getAll(
+      data.category, data.supplier_id
+    )
+
     const banner = new Banner({
       title: data.title,
       position: data.position,
@@ -28,6 +32,10 @@ export class CreateBannerUseCase {
       category: data.category,
       supplier_id: null
     })
+
+    if (allBanners.some(b => b.position === banner.position)) {
+      throw new Error('A posição do banner especificada já está em uso.')
+    }
 
     if (banner.category === BannerCategory.BANNER_PRINCIPAL_DO_FORNECEDOR) {
       if (!data.supplier_id) throw new Error('Banner principal do fornecedor precisa da id do fornecedor.')
